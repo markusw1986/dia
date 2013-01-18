@@ -1,0 +1,528 @@
+@prefix map: <#> .
+@prefix db: <> .
+@prefix vocab: <vocab/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix d2rq: <http://www.wiwiss.fu-berlin.de/suhl/bizer/D2RQ/0.1#> .
+@prefix jdbc: <http://d2rq.org/terms/jdbc/> .
+
+@prefix nm: <http://nomisma.org/id/> .
+@prefix coin: <http://www.dbis.informatik.uni-frankfurt.de/ontologies/2012/08/Coin#> .
+@prefix patt: <http://www.dbis.informatik.uni-frankfurt.de/d2r-extension/2012/08/PatternTranslator#> . 
+
+#map:Configuration a d2rq:Configuration;
+#    d2rq:useAllOptimizations true.
+#
+#
+#	This mappingfile uses the view coin_issuer!
+#
+#	DDL:
+#
+#	DROP VIEW IF EXISTS `dfmroe`.`coin_issuer`;
+#	CREATE VIEW  `dfmroe`.`coin_issuer` 
+#	AS 
+#		select 
+#			*,
+#			`i`.`pr_name` AS `pr_name_coinedfor` 
+#		from (`coin` `c` join `issuer` `i`) 
+#		where (`c`.`issuer_id` = `i`.`pr_id`);
+#
+#
+#
+map:database a d2rq:Database;
+	d2rq:jdbcDriver "com.mysql.jdbc.Driver";
+	d2rq:jdbcDSN "jdbc:mysql://localhost:3306/dfmroe";
+	d2rq:username "root";
+	d2rq:password "";
+	jdbc:autoReconnect "true";
+	jdbc:zeroDateTimeBehavior "convertToNull";
+	#d2rq:resultSizeLimit 20;
+	.
+
+##########
+# coin  
+##########
+map:coin a d2rq:ClassMap;
+	d2rq:dataStorage map:database;
+	d2rq:uriPattern "coin/@@coin_issuer.id@@";
+	d2rq:class nm:coin;
+	.
+
+####################
+# start and enddate
+####################
+
+map:coin_date_from a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:coin;
+	d2rq:property nm:start_date;
+	d2rq:propertyDefinitionLabel "start date";
+	d2rq:column "coin_issuer.date_from";
+	d2rq:datatype xsd:string;
+	.
+map:coin_date_to a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:coin;
+	d2rq:property nm:end_date;
+	d2rq:propertyDefinitionLabel "end date";
+	d2rq:column "coin_issuer.date_to";
+	d2rq:datatype xsd:string;	
+	.
+#############
+# findtype
+#############
+map:coin_find_manner_id a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:coin;
+	d2rq:property coin:hasFindtype;
+	d2rq:propertyDefinitionLabel "findtype";
+	d2rq:refersToClassMap map:find_manner;
+	d2rq:join "coin_issuer.find_manner_id => find_manner.fm_id";
+	.
+
+# Table find_manner
+map:find_manner a d2rq:ClassMap;
+	d2rq:dataStorage map:database;
+	d2rq:class coin:Findtype;
+	d2rq:classDefinitionLabel "findtype";
+	d2rq:uriColumn "find_manner.fm_name_en";
+	d2rq:translateWith map:FindtypeTable;
+	.
+map:FindtypeTable a d2rq:TranslationTable;
+	d2rq:translation [ d2rq:databaseValue "unknown"; d2rq:rdfValue coin:Uncertain; ];
+    d2rq:translation [ d2rq:databaseValue "stray-find"; d2rq:rdfValue coin:Single; ];
+	d2rq:translation [ d2rq:databaseValue "hoard-find"; d2rq:rdfValue coin:Hoard; ];
+	d2rq:translation [ d2rq:databaseValue "burial-find"; d2rq:rdfValue coin:Burial; ];
+	d2rq:translation [ d2rq:databaseValue "settlement-find"; d2rq:rdfValue coin:Single; ];
+	d2rq:translation [ d2rq:databaseValue "excavation"; d2rq:rdfValue coin:Single; ];
+	d2rq:translation [ d2rq:databaseValue "dedication"; d2rq:rdfValue coin:VotiveDeposit; ];
+	d2rq:translation [ d2rq:databaseValue "detector-stray-find"; d2rq:rdfValue coin:Single; ];
+	
+	.
+	
+###########
+# period
+###########
+
+map:coin_authority_id a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:coin;
+	d2rq:property coin:hasPeriod;
+	d2rq:propertyDefinitionLabel "period";
+	d2rq:refersToClassMap map:authority;
+	d2rq:join "coin_issuer.authority_id => authority.auth_id";
+	.
+	
+
+# Table authority
+map:authority a d2rq:ClassMap;
+	d2rq:dataStorage map:database;
+	d2rq:class coin:Period;
+	d2rq:classDefinitionLabel "period";
+	d2rq:uriColumn "authority.auth_name";
+	d2rq:translateWith map:PeriodTable;
+	.
+	
+map:PeriodTable a map:TranslationTable;
+	d2rq:translation [ d2rq:databaseValue "GRIECHEN"; d2rq:rdfValue coin:Greek; ];
+	d2rq:translation [ d2rq:databaseValue "KELTEN"; d2rq:rdfValue coin:Celtic; ];
+	d2rq:translation [ d2rq:databaseValue "REPUBLIK"; d2rq:rdfValue coin:Roman; ];
+	d2rq:translation [ d2rq:databaseValue "ROM - KAISERZEIT"; d2rq:rdfValue coin:Roman; ];
+	d2rq:translation [ d2rq:databaseValue "PROVINZ"; d2rq:rdfValue coin:GreekImperial; ];
+	d2rq:translation [ d2rq:databaseValue "BYZANZ"; d2rq:rdfValue coin:Byzantine; ];
+	d2rq:translation [ d2rq:databaseValue "ROM - NON-MONET?R"; d2rq:rdfValue coin:RomanNonMon; ];
+	.
+############
+# authority
+############
+
+map:coin_issuer_id a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:coin;
+	d2rq:property coin:hasAuthority;
+	d2rq:propertyDefinitionLabel "authority";
+	d2rq:refersToClassMap map:issuer;
+	.
+	
+map:coin_issuer_id_unknown a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:coin;
+	d2rq:property coin:hasAuthority;
+	d2rq:propertyDefinitionLabel "authority";
+	d2rq:condition "coin_issuer.pr_name like '(%' OR coin_issuer.pr_name like 'Anonym%' OR coin_issuer.pr_name like 'unbestimmbar%'";
+	d2rq:constantValue coin:Unknown;
+	.		
+	
+#map:coinedFor a d2rq:PropertyBridge;
+#	d2rq:belongsToClassMap map:coin;
+#	d2rq:property coin:coinedFor;
+#	d2rq:propertyDefinitionLabel "coinedFor";
+#	d2rq:column "coin_issuer.pr_name_coinedfor";
+#	d2rq:condition "coin_issuer.pr_name like '%f?r%'";
+#	d2rq:datatype xsd:string;
+#	d2rq:translateWith map:CoinedForTable;
+#	
+#.
+
+map:CoinedForTable a d2rq:TranslationTable;
+	d2rq:javaClass "de.unifrankfurt.informatik.dbis.d2rqextension.PatternTranslator";
+	patt:translatePattern [
+		patt:type patt:After; 
+		patt:delimiter "f?r";
+	]
+	
+.	
+
+# Table authority
+map:issuer a d2rq:ClassMap;
+	d2rq:dataStorage map:database;
+	d2rq:class nm:authority;
+	d2rq:classDefinitionLabel "authority";
+	d2rq:uriColumn "coin_issuer.pr_name";
+	d2rq:translateWith map:IssuerTable;
+	.
+
+map:IssuerTable a map:TranslationTable;
+	d2rq:javaClass "de.unifrankfurt.informatik.dbis.d2rqextension.PatternTranslator";
+	patt:translatePattern [
+		patt:type patt:Before; 
+		patt:delimiter "(";
+		patt:delimiter "/";
+		patt:delimiter "f?r";
+		patt:delimiter "oder";
+		patt:delimiter "bzw.";
+		patt:delimiter ",";
+		patt:delimiter "und";
+		patt:delimiter "?";
+		patt:delimiter "-";
+		patt:delimiter ":";
+	];
+
+	patt:translation [ patt:databaseValue "Aegyptus"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Anthemius"; patt:rdfValue coin:Anthemius; ];
+	patt:translation [ patt:databaseValue "Antoninus I. Pius"; patt:rdfValue nm:antonius_pius; ];
+	patt:translation [ patt:databaseValue "Antoninus III."; patt:rdfValue nm:caracalla; ];
+	patt:translation [ patt:databaseValue "Antoninus IV."; patt:rdfValue coin:Elagabal; ];
+	patt:translation [ patt:databaseValue "Arcadius"; patt:rdfValue coin:Arcadius; ];
+	patt:translation [ patt:databaseValue "Augustus"; patt:rdfValue nm:augustus; ];
+	patt:translation [ patt:databaseValue "Aurelianus"; patt:rdfValue coin:Aurelian; ];
+	patt:translation [ patt:databaseValue "Basiliscus"; patt:rdfValue coin:Basiliscus; ];
+	patt:translation [ patt:databaseValue "Bithynia"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Boier"; patt:rdfValue coin:Boii; ];
+	patt:translation [ patt:databaseValue "C.NAE BALB"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "CAESAR"; patt:rdfValue coin:Caesar; ];
+	patt:translation [ patt:databaseValue "Caius"; patt:rdfValue nm:gaius; ];
+	patt:translation [ patt:databaseValue "CALDVS IIIVIR"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Carausius"; patt:rdfValue coin:Carausius; ];
+	patt:translation [ patt:databaseValue "Carinus"; patt:rdfValue coin:Carinus; ];
+	patt:translation [ patt:databaseValue "Carus"; patt:rdfValue coin:Carus; ];
+	patt:translation [ patt:databaseValue "Claudius I."; patt:rdfValue nm:claudius; ];
+	patt:translation [ patt:databaseValue "Claudius II."; patt:rdfValue coin:ClaudiusGothicus; ];
+	patt:translation [ patt:databaseValue "Clodius Albinus"; patt:rdfValue nm:clodius_albinus; ];
+	patt:translation [ patt:databaseValue "CN.BLASIO CN.F"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "CN.DOMI"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "CN.MAGNVS IMP"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Commodus"; patt:rdfValue nm:commodus; ];
+	patt:translation [ patt:databaseValue "Constans I."; patt:rdfValue coin:Constans; ];
+	patt:translation [ patt:databaseValue "Constantinus I."; patt:rdfValue coin:ConstantinusMagnus; ];
+	patt:translation [ patt:databaseValue "Constantinus II."; patt:rdfValue coin:FlaviusConstantinusAugustus; ];
+	patt:translation [ patt:databaseValue "Constantinus III."; patt:rdfValue coin:FlaviusClaudiusConstantinus; ];
+	patt:translation [ patt:databaseValue "Constantius I."; patt:rdfValue coin:ConstantiusChlorus; ];
+	patt:translation [ patt:databaseValue "Constantius II."; patt:rdfValue coin:ConstantiusAugustus; ];
+	patt:translation [ patt:databaseValue "Didius Iulianus I."; patt:rdfValue nm:didius_julianus; ];
+	patt:translation [ patt:databaseValue "Diocletianus"; patt:rdfValue coin:Diocletian; ];
+	patt:translation [ patt:databaseValue "Domitianus"; patt:rdfValue nm:domitian; ];
+	patt:translation [ patt:databaseValue "Edessa"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Flavisch"; patt:rdfValue coin:Flavian; ];
+	patt:translation [ patt:databaseValue "Florianus"; patt:rdfValue coin:Florianus; ];
+	patt:translation [ patt:databaseValue "Galatia"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Galba"; patt:rdfValue nm:galba; ];
+	patt:translation [ patt:databaseValue "Gallienus"; patt:rdfValue nm:gallienus; ];
+	patt:translation [ patt:databaseValue "Gordianus III."; patt:rdfValue coin:Gordian; ];
+	patt:translation [ patt:databaseValue "Gratianus"; patt:rdfValue coin:Gratian; ];
+	patt:translation [ patt:databaseValue "Hadrianus"; patt:rdfValue nm:hadrian; ];
+	patt:translation [ patt:databaseValue "Honorius"; patt:rdfValue coin:Honorius; ];
+	patt:translation [ patt:databaseValue "Iovianus"; patt:rdfValue coin:Jovian; ];
+	patt:translation [ patt:databaseValue "Iulianus III."; patt:rdfValue coin:IulianusApostata; ];
+	patt:translation [ patt:databaseValue "Iustinus II."; patt:rdfValue coin:IustinusII; ];
+	patt:translation [ patt:databaseValue "Karien"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Kilikien"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "L.PISO L.F L.N FRVGI"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "L.SVLLA IMPE"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Leo I."; patt:rdfValue coin:Leo; ];
+	patt:translation [ patt:databaseValue "Licinius I."; patt:rdfValue coin:Licinius; ];
+	patt:translation [ patt:databaseValue "Lycia in genere"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Lydien"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Macrinus"; patt:rdfValue nm:macrinus; ];
+	patt:translation [ patt:databaseValue "Magnentius"; patt:rdfValue coin:Magnetius; ];
+	patt:translation [ patt:databaseValue "Magnus Maximus"; patt:rdfValue coin:MagnusMaximus; ];
+	patt:translation [ patt:databaseValue "Marcus Antonius"; patt:rdfValue coin:MarcusAntonius; ];
+	patt:translation [ patt:databaseValue "Marcus Aurelius"; patt:rdfValue nm:marcus_aurelius; ];
+	patt:translation [ patt:databaseValue "Marius"; patt:rdfValue coin:Marius; ];
+	patt:translation [ patt:databaseValue "Maxentius"; patt:rdfValue coin:Maxentius; ];
+	patt:translation [ patt:databaseValue "Maximianus I."; patt:rdfValue coin:Maximian; ];
+	patt:translation [ patt:databaseValue "Maximianus II."; patt:rdfValue coin:Galerius; ];
+	patt:translation [ patt:databaseValue "Maximinus I."; patt:rdfValue coin:MaximinusThrax; ];
+	patt:translation [ patt:databaseValue "Maximinus II."; patt:rdfValue coin:MaximinusDaia; ];
+	patt:translation [ patt:databaseValue "Michael VII. Ducas"; patt:rdfValue coin:MichaelDoukas; ];
+	patt:translation [ patt:databaseValue "Mittelkelten"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Moesia Superior"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Nero"; patt:rdfValue nm:nero; ];
+	patt:translation [ patt:databaseValue "Nerva"; patt:rdfValue nm:nerva; ];
+	patt:translation [ patt:databaseValue "Octavianus"; patt:rdfValue nm:augustus; ];
+	patt:translation [ patt:databaseValue "Ostkelten"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "P.PAETVS"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "P.SATVRIENVS"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Pampyhlia"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Philippos III. Arrhidaios"; patt:rdfValue coin:PhillipMacedon; ];
+	patt:translation [ patt:databaseValue "Philippus I. Arabs"; patt:rdfValue coin:Philippus; ];
+	patt:translation [ patt:databaseValue "Philippus I."; patt:rdfValue coin:Philippus; ];
+	patt:translation [ patt:databaseValue "Postumus"; patt:rdfValue coin:Postumus; ];
+	patt:translation [ patt:databaseValue "Probus"; patt:rdfValue coin:MarcusAureliusProbus; ];
+	patt:translation [ patt:databaseValue "Provincia Asia"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Ptolemaios II. Philadelphos"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Pupienus"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "PVR"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Q.FABI LABEO"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Q.TITI"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Quintillus"; patt:rdfValue coin:Quintillus; ];
+	patt:translation [ patt:databaseValue "Septimius Severus"; patt:rdfValue nm:septimius_severus; ];
+	patt:translation [ patt:databaseValue "Severus Alexander"; patt:rdfValue nm:severus_alexander; ];
+	patt:translation [ patt:databaseValue "Severus II."; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Tacitus"; patt:rdfValue coin:MarcusClaudiusTacitus; ];
+	patt:translation [ patt:databaseValue "Tesserae"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Tetricus I."; patt:rdfValue coin:Tetricus; ];
+	patt:translation [ patt:databaseValue "Theodosius I."; patt:rdfValue coin:Theodosius; ];
+	patt:translation [ patt:databaseValue "Theodosius II."; patt:rdfValue coin:TheodosiusJuniorAugustus; ];
+	patt:translation [ patt:databaseValue "Thracia"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "TI.VETVR"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Tiberius"; patt:rdfValue nm:tiberius; ];
+	patt:translation [ patt:databaseValue "Titus"; patt:rdfValue nm:titus; ];
+	patt:translation [ patt:databaseValue "Traianus"; patt:rdfValue nm:trajan; ];
+	patt:translation [ patt:databaseValue "Traianus Decius"; patt:rdfValue coin:Decius; ];
+	patt:translation [ patt:databaseValue "Trebonianus Gallus"; patt:rdfValue coin:TrebioanusGallus; ];
+	patt:translation [ patt:databaseValue "Valens II."; patt:rdfValue coin:Valens; ];
+	patt:translation [ patt:databaseValue "Valentinianus I."; patt:rdfValue coin:Valentinian; ];
+	patt:translation [ patt:databaseValue "Valentinianus II."; patt:rdfValue coin:FlaviusValentinian; ];
+	patt:translation [ patt:databaseValue "Valerianus I."; patt:rdfValue coin:Valerian; ];
+	patt:translation [ patt:databaseValue "Vespasianus"; patt:rdfValue nm:vespasian; ];
+	patt:translation [ patt:databaseValue "Vetranio"; patt:rdfValue coin:Vetranio; ];
+	patt:translation [ patt:databaseValue "Victorinus"; patt:rdfValue coin:Victorinus; ];
+	patt:translation [ patt:databaseValue "Vitellius"; patt:rdfValue nm:vitellius; ];
+	patt:translation [ patt:databaseValue "Westkelten"; patt:rdfValue coin:Unknown; ];
+.
+
+
+
+
+##########
+# mint
+##########
+
+map:coin_mint_id a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:coin;
+	d2rq:property coin:hasMint;
+	d2rq:propertyDefinitionLabel "mint";	
+	d2rq:refersToClassMap map:mint;
+	d2rq:join "coin_issuer.mint_id => mint.mint_id";
+.
+
+map:mint a d2rq:ClassMap;
+	d2rq:dataStorage map:database;
+	d2rq:class nm:mint;
+	d2rq:classDefinitionLabel "mint";
+	d2rq:uriColumn "mint.mint_name";
+	d2rq:translateWith map:MintTable;
+.
+
+map:MintTable a d2rq:TranslationTable;
+	d2rq:translation [ d2rq:databaseValue "?stl. Mzst."; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "Akrasus / Lydien"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "Ale"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "Alexandria"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "Ankyra / Galatien"; d2rq:rdfValue coin:Ankyra; ];
+	d2rq:translation [ d2rq:databaseValue "Ant"; d2rq:rdfValue nm:antiochia_ad_callirhoem; ];
+	d2rq:translation [ d2rq:databaseValue "Ant?"; d2rq:rdfValue nm:antiochia_ad_callirhoem; ];
+	d2rq:translation [ d2rq:databaseValue "Aqu"; d2rq:rdfValue nm:aquileia; ];
+	d2rq:translation [ d2rq:databaseValue "Aqu/Sis"; d2rq:rdfValue nm:aquileia; ];
+	d2rq:translation [ d2rq:databaseValue "Aqu/Tes"; d2rq:rdfValue nm:aquileia; ];
+	d2rq:translation [ d2rq:databaseValue "Arl"; d2rq:rdfValue nm:arelate; ];
+	d2rq:translation [ d2rq:databaseValue "Arl/Tes/Con"; d2rq:rdfValue nm:arelate; ];
+	d2rq:translation [ d2rq:databaseValue "Arl?"; d2rq:rdfValue nm:arelate; ];
+	d2rq:translation [ d2rq:databaseValue "Asia"; d2rq:rdfValue nm:asia; ];
+	d2rq:translation [ d2rq:databaseValue "Asp"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "Brit"; d2rq:rdfValue nm:britannia; ];
+	d2rq:translation [ d2rq:databaseValue "Byz"; d2rq:rdfValue nm:byzantium; ];
+	d2rq:translation [ d2rq:databaseValue "Col"; d2rq:rdfValue nm:colonia_claudia_ara_agrippinensium; ];
+	d2rq:translation [ d2rq:databaseValue "Comm"; d2rq:rdfValue coin:Commagene; ];
+	d2rq:translation [ d2rq:databaseValue "Con"; d2rq:rdfValue nm:byzantium; ];
+	d2rq:translation [ d2rq:databaseValue "Con?"; d2rq:rdfValue nm:byzantium; ];
+	d2rq:translation [ d2rq:databaseValue "Edessa / Mesopotamien"; d2rq:rdfValue nm:edessa_mesopotamia; ];
+	d2rq:translation [ d2rq:databaseValue "Ems"; d2rq:rdfValue coin:Homs; ];
+	d2rq:translation [ d2rq:databaseValue "Gall"; d2rq:rdfValue nm:gallia; ];
+	d2rq:translation [ d2rq:databaseValue "Her"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "Her/Kyz"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "Her/Kyz/Nic"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "Her/Nic"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "Hisp (Rep.)"; d2rq:rdfValue nm:hispania; ];
+	d2rq:translation [ d2rq:databaseValue "Ital"; d2rq:rdfValue nm:italica; ];
+	d2rq:translation [ d2rq:databaseValue "Kar"; d2rq:rdfValue nm:carthage; ];
+	d2rq:translation [ d2rq:databaseValue "kelt. Mzst."; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "Kyz"; d2rq:rdfValue nm:cyzicus; ];
+	d2rq:translation [ d2rq:databaseValue "Kyz/Ale"; d2rq:rdfValue nm:cyzicus; ];
+	d2rq:translation [ d2rq:databaseValue "Kyz?"; d2rq:rdfValue nm:cyzicus; ];
+	d2rq:translation [ d2rq:databaseValue "Lon"; d2rq:rdfValue nm:londinium; ];
+	d2rq:translation [ d2rq:databaseValue "Lug"; d2rq:rdfValue nm:lugdunum; ];
+	d2rq:translation [ d2rq:databaseValue "Lug/Rom"; d2rq:rdfValue nm:lugdunum; ];
+	d2rq:translation [ d2rq:databaseValue "Lug/Rom/Tar"; d2rq:rdfValue nm:lugdunum; ];
+	d2rq:translation [ d2rq:databaseValue "Lug?"; d2rq:rdfValue nm:lugdunum; ];
+	d2rq:translation [ d2rq:databaseValue "Lycia in genere"; d2rq:rdfValue nm:lycia; ];
+	d2rq:translation [ d2rq:databaseValue "Med"; d2rq:rdfValue nm:mediolanum; ];
+	d2rq:translation [ d2rq:databaseValue "Med/Rom/Ant"; d2rq:rdfValue nm:mediolanum; ];
+	d2rq:translation [ d2rq:databaseValue "Med/Rom/Con"; d2rq:rdfValue nm:mediolanum; ];
+	d2rq:translation [ d2rq:databaseValue "Med/Rom/Kyz"; d2rq:rdfValue nm:mediolanum; ];
+	d2rq:translation [ d2rq:databaseValue "Med/Rom/Kyz/Ant"; d2rq:rdfValue nm:mediolanum; ];
+	d2rq:translation [ d2rq:databaseValue "Med/Sis"; d2rq:rdfValue nm:mediolanum; ];
+	d2rq:translation [ d2rq:databaseValue "Med?"; d2rq:rdfValue nm:mediolanum; ];
+	d2rq:translation [ d2rq:databaseValue "Mon Com"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "Mylasa / Karien"; d2rq:rdfValue nm:mylasa; ];
+	d2rq:translation [ d2rq:databaseValue "Mzst. ?"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "Mzst. der Boier"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "Mzst. der Taurisker"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "Mzst. in Norikum"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "Nic"; d2rq:rdfValue nm:nicomedia; ];
+	d2rq:translation [ d2rq:databaseValue "Nicaia / Bithynien"; d2rq:rdfValue nm:nicomedia; ];
+	d2rq:translation [ d2rq:databaseValue "Niko"; d2rq:rdfValue nm:nicomedia; ];
+	d2rq:translation [ d2rq:databaseValue "Pautalia / Thrakien"; d2rq:rdfValue nm:pautalia; ];
+	d2rq:translation [ d2rq:databaseValue "Pergamon (Aug.)"; d2rq:rdfValue coin:Pergamon; ];
+	d2rq:translation [ d2rq:databaseValue "Prov ?"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "Rom"; d2rq:rdfValue nm:rome; ];
+	d2rq:translation [ d2rq:databaseValue "Rom (Rep.)"; d2rq:rdfValue nm:rome; ];
+	d2rq:translation [ d2rq:databaseValue "Rom/Ant"; d2rq:rdfValue nm:rome; ];
+	d2rq:translation [ d2rq:databaseValue "Rom/Kyz"; d2rq:rdfValue nm:rome; ];
+	d2rq:translation [ d2rq:databaseValue "Rom/Lao"; d2rq:rdfValue nm:rome; ];
+	d2rq:translation [ d2rq:databaseValue "Rom/Med"; d2rq:rdfValue nm:rome; ];
+	d2rq:translation [ d2rq:databaseValue "Rom/Med/Sis"; d2rq:rdfValue nm:rome; ];
+	d2rq:translation [ d2rq:databaseValue "Rom/Sis"; d2rq:rdfValue nm:rome; ];
+	d2rq:translation [ d2rq:databaseValue "Rom?"; d2rq:rdfValue nm:rome; ];
+	d2rq:translation [ d2rq:databaseValue "Senones"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "Ser"; d2rq:rdfValue nm:serdica; ];
+	d2rq:translation [ d2rq:databaseValue "Sid"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "Sir"; d2rq:rdfValue nm:sirmium; ];
+	d2rq:translation [ d2rq:databaseValue "Sir/Tes"; d2rq:rdfValue nm:sirmium; ];
+	d2rq:translation [ d2rq:databaseValue "Sis"; d2rq:rdfValue nm:siscia; ];
+	d2rq:translation [ d2rq:databaseValue "Sis/Ant"; d2rq:rdfValue nm:siscia; ];
+	d2rq:translation [ d2rq:databaseValue "Sis/Sir"; d2rq:rdfValue nm:siscia; ];
+	d2rq:translation [ d2rq:databaseValue "Sis/Trp"; d2rq:rdfValue nm:siscia; ];
+	d2rq:translation [ d2rq:databaseValue "Sis?"; d2rq:rdfValue nm:siscia; ];
+	d2rq:translation [ d2rq:databaseValue "Tar"; d2rq:rdfValue nm:tarraco; ];
+	d2rq:translation [ d2rq:databaseValue "Tarsos / Kilikien"; d2rq:rdfValue coin:Tarsus; ];
+	d2rq:translation [ d2rq:databaseValue "Tes"; d2rq:rdfValue nm:thessalonica; ];
+	d2rq:translation [ d2rq:databaseValue "Tes/Her/Con/Kyz"; d2rq:rdfValue nm:thessalonica; ];
+	d2rq:translation [ d2rq:databaseValue "Tes?"; d2rq:rdfValue nm:thessalonica; ];
+	d2rq:translation [ d2rq:databaseValue "Thessalonica (GR)"; d2rq:rdfValue nm:thessalonica; ];
+	d2rq:translation [ d2rq:databaseValue "Tic"; d2rq:rdfValue nm:ticinum; ];
+	d2rq:translation [ d2rq:databaseValue "Tre"; d2rq:rdfValue nm:treveri; ];
+	d2rq:translation [ d2rq:databaseValue "Tre/Aqu/Sis"; d2rq:rdfValue nm:treveri; ];
+	d2rq:translation [ d2rq:databaseValue "Tre/Arl"; d2rq:rdfValue nm:treveri; ];
+	d2rq:translation [ d2rq:databaseValue "Tre/Col"; d2rq:rdfValue nm:treveri; ];
+	d2rq:translation [ d2rq:databaseValue "Tre/Sis"; d2rq:rdfValue nm:treveri; ];
+	d2rq:translation [ d2rq:databaseValue "Tre?"; d2rq:rdfValue nm:treveri; ];
+	d2rq:translation [ d2rq:databaseValue "Velem"; d2rq:rdfValue coin:Velem; ];
+	d2rq:translation [ d2rq:databaseValue "Vim"; d2rq:rdfValue nm:viminacium; ];
+	d2rq:translation [ d2rq:databaseValue "Vindelici"; d2rq:rdfValue coin:Vindelicia; ];
+	d2rq:translation [ d2rq:databaseValue "Wms"; d2rq:rdfValue coin:Unknown; ];
+
+
+.
+##################
+# denomination
+##################
+
+map:coin_denomination a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:coin;
+	d2rq:refersToClassMap map:denomination;
+	d2rq:property coin:hasDenomination;
+	d2rq:join "coin_issuer.denomination => denomination.den_id"
+.
+
+map:denomination a d2rq:ClassMap;
+	d2rq:dataStorage map:database;
+	d2rq:class nm:denomination;
+	d2rq:uriColumn "denomination.den_name";
+	d2rq:translateWith map:DenominationTable;
+.
+
+map:DenominationTable a d2rq:TranslationTable;
+	d2rq:translation [ d2rq:databaseValue "Au"; d2rq:rdfValue nm:aureus; ];
+	d2rq:translation [ d2rq:databaseValue "D"; d2rq:rdfValue nm:denarius; ];
+	d2rq:translation [ d2rq:databaseValue "S"; d2rq:rdfValue nm:sestertius; ];
+	d2rq:translation [ d2rq:databaseValue "As"; d2rq:rdfValue nm:as; ];
+	d2rq:translation [ d2rq:databaseValue "Dp"; d2rq:rdfValue nm:dupondius; ];
+	d2rq:translation [ d2rq:databaseValue "Qui"; d2rq:rdfValue nm:quinarius; ];
+	d2rq:translation [ d2rq:databaseValue "An"; d2rq:rdfValue coin:Antoninianus; ];
+	d2rq:translation [ d2rq:databaseValue "An (Cu)"; d2rq:rdfValue coin:Antoninianus; ];
+	d2rq:translation [ d2rq:databaseValue "AE"; d2rq:rdfValue nm:ae1; ];
+	d2rq:translation [ d2rq:databaseValue "Fol"; d2rq:rdfValue nm:follis; ];
+	d2rq:translation [ d2rq:databaseValue "2Mai (AE1)"; d2rq:rdfValue nm:ae1; ];
+	d2rq:translation [ d2rq:databaseValue "Mai (AE2)"; d2rq:rdfValue nm:ae2; ];
+	d2rq:translation [ d2rq:databaseValue "Cen (AE3)"; d2rq:rdfValue nm:ae3; ];
+	d2rq:translation [ d2rq:databaseValue "?Cen (AE4)"; d2rq:rdfValue nm:ae4; ];
+	d2rq:translation [ d2rq:databaseValue "Sol"; d2rq:rdfValue coin:Solidus; ];
+	d2rq:translation [ d2rq:databaseValue "Trem"; d2rq:rdfValue coin:Unkown; ];
+	d2rq:translation [ d2rq:databaseValue "Qd"; d2rq:rdfValue nm:quadrans; ];
+	d2rq:translation [ d2rq:databaseValue "Dp/As"; d2rq:rdfValue nm:dupondius; ];
+	d2rq:translation [ d2rq:databaseValue "Fol/Cen"; d2rq:rdfValue nm:follis; ];
+	d2rq:translation [ d2rq:databaseValue "4Dr"; d2rq:rdfValue coin:Tetradrachm; ];
+	d2rq:translation [ d2rq:databaseValue "Kls"; d2rq:rdfValue coin:Unkown; ];
+	d2rq:translation [ d2rq:databaseValue "D (ZF)"; d2rq:rdfValue nm:denarius; ];
+	d2rq:translation [ d2rq:databaseValue "PsAn"; d2rq:rdfValue coin:Unkown; ];
+	d2rq:translation [ d2rq:databaseValue "Ar"; d2rq:rdfValue coin:Unkown; ];
+	d2rq:translation [ d2rq:databaseValue "Mil"; d2rq:rdfValue coin:Unkown; ];
+	d2rq:translation [ d2rq:databaseValue "Sil"; d2rq:rdfValue coin:Siliqua; ];
+	d2rq:translation [ d2rq:databaseValue "Tessera"; d2rq:rdfValue coin:Unkown; ];
+	d2rq:translation [ d2rq:databaseValue "Sem"; d2rq:rdfValue nm:semis; ];
+	d2rq:translation [ d2rq:databaseValue "S/As"; d2rq:rdfValue nm:sestertius; ];
+	d2rq:translation [ d2rq:databaseValue "D (AE)"; d2rq:rdfValue nm:denarius; ];
+	d2rq:translation [ d2rq:databaseValue "Mdl"; d2rq:rdfValue coin:Unkown; ];
+	d2rq:translation [ d2rq:databaseValue "S (Fe)"; d2rq:rdfValue nm:sestertius; ];
+	d2rq:translation [ d2rq:databaseValue "As/Sem"; d2rq:rdfValue nm:as; ];
+	d2rq:translation [ d2rq:databaseValue "An/Fol"; d2rq:rdfValue coin:Antoninianus; ];
+	d2rq:translation [ d2rq:databaseValue "S (ZF)"; d2rq:rdfValue nm:sestertius; ];
+	d2rq:translation [ d2rq:databaseValue "D/An"; d2rq:rdfValue nm:denarius; ];
+	d2rq:translation [ d2rq:databaseValue "40 Nummi"; d2rq:rdfValue nm:follis; ];
+	d2rq:translation [ d2rq:databaseValue "S/Dp"; d2rq:rdfValue nm:sestertius; ];
+	d2rq:translation [ d2rq:databaseValue "St"; d2rq:rdfValue coin:Unkown; ];
+	d2rq:translation [ d2rq:databaseValue "?Fol"; d2rq:rdfValue nm:follis; ];
+	d2rq:translation [ d2rq:databaseValue "An (ZF)"; d2rq:rdfValue coin:Antoninianus; ];
+	d2rq:translation [ d2rq:databaseValue "1/3 St"; d2rq:rdfValue coin:Unkown; ];
+	d2rq:translation [ d2rq:databaseValue "Pot"; d2rq:rdfValue nm:potin; ];
+	d2rq:translation [ d2rq:databaseValue "Mz"; d2rq:rdfValue coin:Unkown; ];
+	d2rq:translation [ d2rq:databaseValue "As (ZF)"; d2rq:rdfValue nm:as; ];
+	d2rq:translation [ d2rq:databaseValue "Cen (AE3) (ZF)"; d2rq:rdfValue nm:ae3; ];
+	
+	
+.
+#############
+# material 
+#############
+
+map:coin_material a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:coin;
+	d2rq:refersToClassMap map:material;
+	d2rq:property coin:hasMaterial;
+	d2rq:join "coin_issuer.denomination => denomination.den_id";
+	d2rq:join "denomination.den_metal => metal.met_id";
+.
+
+map:material a d2rq:ClassMap;
+	d2rq:dataStorage map:database;
+	d2rq:class nm:denomination;
+	d2rq:uriColumn "metal.met_name";
+	d2rq:translateWith map:MaterialTable;
+.
+
+map:MaterialTable a d2rq:TranslationTable;
+	
+	d2rq:translation [ d2rq:databaseValue "ZF"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "AE"; d2rq:rdfValue nm:ae; ];
+	d2rq:translation [ d2rq:databaseValue "AV"; d2rq:rdfValue nm:av; ];
+	d2rq:translation [ d2rq:databaseValue "AR"; d2rq:rdfValue nm:ar; ];
+	d2rq:translation [ d2rq:databaseValue "-"; d2rq:rdfValue coin:Unknown; ];
+
+	.

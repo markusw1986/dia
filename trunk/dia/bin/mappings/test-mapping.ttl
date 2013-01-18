@@ -1,0 +1,165 @@
+@prefix map: <#> .
+@prefix db: <> .
+@prefix vocab: <vocab/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix d2rq: <http://www.wiwiss.fu-berlin.de/suhl/bizer/D2RQ/0.1#> .
+@prefix jdbc: <http://d2rq.org/terms/jdbc/> .
+
+
+@prefix nm: <http://nomisma.org/id/> .
+@prefix coin: <http://www.dbis.informatik.uni-frankfurt.de/ontologies/2012/08/Coin#> .
+@prefix patt: <http://www.dbis.informatik.uni-frankfurt.de/d2r-extension/2012/08/PatternTranslator#> . 
+
+map:database a d2rq:Database;
+	d2rq:jdbcDriver "com.mysql.jdbc.Driver";
+	d2rq:jdbcDSN "jdbc:mysql://localhost/test";
+	d2rq:username "root";
+	jdbc:autoReconnect "true";
+	jdbc:zeroDateTimeBehavior "convertToNull";
+	.
+
+# Table coin
+map:coin a d2rq:ClassMap;
+	d2rq:dataStorage map:database;
+	d2rq:uriPattern "coin/@@coin.id@@";
+	d2rq:class nm:coin;
+	d2rq:classDefinitionLabel "coin";
+	.
+
+map:coin_id a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:coin;
+	d2rq:property vocab:coin_id;
+	d2rq:propertyDefinitionLabel "coin id";
+	d2rq:column "coin.id";
+	d2rq:datatype xsd:integer;
+	.
+map:coin_material a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:coin;
+	d2rq:property nm:material;
+	d2rq:propertyDefinitionLabel "coin material";
+	d2rq:uriColumn "coin.material";
+	d2rq:translateWith map:MaterialTable;
+	.
+	
+map:MaterialTable a d2rq:TranslationTable;
+	d2rq:translation [ d2rq:databaseValue "silber"; d2rq:rdfValue nm:ar; ];
+    d2rq:translation [ d2rq:databaseValue "bronze"; d2rq:rdfValue nm:potin; ];
+	.
+	
+map:coin_date a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:coin;
+	d2rq:property nm:date_found;
+	d2rq:propertyDefinitionLabel "coin date";
+	d2rq:column "coin.date";
+	d2rq:datatype xsd:date;
+	.
+
+###### HAS RULER ######
+	
+map:coin_p_id__ref a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:coin;
+	d2rq:property nm:issuer;
+	d2rq:refersToClassMap map:praegeherr;
+	d2rq:join "coin.p_id => praegeherr.id";
+	.
+	
+
+###### RULER ######
+	
+map:praegeherr a d2rq:ClassMap;
+	d2rq:dataStorage map:database;
+	d2rq:class nm:issuer;
+	d2rq:classDefinitionLabel "praegeherr";
+	
+	d2rq:uriColumn "praegeherr.name";
+	d2rq:translateWith map:PraegeherrTable;
+	.
+	
+map:PraegeherrTable a d2rq:TranslationTable;
+	d2rq:translation [ d2rq:databaseValue "augustus"; d2rq:rdfValue nm:augustus; ];
+    d2rq:translation [ d2rq:databaseValue "nero"; d2rq:rdfValue nm:nero; ];
+	
+	.
+
+###### COINED FOR PERSON ######
+
+map:praegeherr_coinedfor_uncertain a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:praegeherr;
+	d2rq:property coin:coined_for;
+	d2rq:condition "praegeherr.for like '?%'";
+	d2rq:propertyDefinitionLabel "coin coined_for";
+	#d2rq:uriColumn "praegeherr.for";
+	d2rq:constantValue coin:Uncertain;
+	.
+
+map:praegeherr_coinedfor a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:praegeherr;
+	d2rq:property coin:coined_for;
+	d2rq:propertyDefinitionLabel "coin coined_for";
+	d2rq:uriColumn "praegeherr.for";
+	d2rq:translateWith map:CoinedForTable;
+	.
+	
+
+map:CoinedForTable a d2rq:TranslationTable;
+	d2rq:javaClass "de.unifrankfurt.informatik.dbis.d2rqextension.PatternTranslator";
+	
+	patt:translatePattern [
+		patt:type patt:Before; 
+		patt:delimiter "(";
+	];
+	
+	patt:translation [ patt:databaseValue "augustus"; patt:rdfValue nm:augustus; ];
+	patt:translation [ patt:databaseValue "titus"; patt:rdfValue nm:titus; ];
+	.
+	
+###### BEGIN PERIOD ######
+
+map:coin_begin_period a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:coin;
+	d2rq:property coin:hasDateFrom;
+	d2rq:join "coin.p_id => praegeherr.id";
+	d2rq:column "praegeherr.for";
+	d2rq:datatype xsd:integer;
+	
+	d2rq:condition "praegeherr.for like '%(%-%)%'";
+	
+	d2rq:translateWith map:BeginPeriodTable;
+	.
+
+map:BeginPeriodTable a d2rq:TranslationTable;
+	d2rq:javaClass "de.unifrankfurt.informatik.dbis.d2rqextension.PatternTranslator";
+	patt:translatePattern [
+		patt:type patt:Between; 
+		patt:open "(";
+		patt:close "-";
+	];
+	
+	.
+
+###### END PERIOD ######
+	
+map:coin_end_period a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:coin;
+	d2rq:property coin:hasDateUntil;
+	d2rq:join "coin.p_id => praegeherr.id";
+	d2rq:column "praegeherr.for";
+	d2rq:datatype xsd:integer;
+	
+	
+	d2rq:condition "praegeherr.for like '%(%-%)%'";
+	
+	d2rq:translateWith map:EndPeriodTable;
+	.
+
+map:EndPeriodTable a d2rq:TranslationTable;
+	d2rq:javaClass "de.unifrankfurt.informatik.dbis.d2rqextension.PatternTranslator";
+	patt:translatePattern [
+		patt:type patt:Between; 
+		patt:open "-";
+		patt:close ")";
+	];
+	
+	.

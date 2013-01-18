@@ -1,0 +1,576 @@
+@prefix map: <#> .
+@prefix db: <> .
+@prefix vocab: <vocab/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix d2rq: <http://www.wiwiss.fu-berlin.de/suhl/bizer/D2RQ/0.1#> .
+@prefix jdbc: <http://d2rq.org/terms/jdbc/> .
+
+
+@prefix nm: <http://nomisma.org/id/> .
+@prefix coin: <http://www.dbis.informatik.uni-frankfurt.de/ontologies/2012/08/Coin#> .
+@prefix patt: <http://www.dbis.informatik.uni-frankfurt.de/d2r-extension/2012/08/PatternTranslator#> . 
+
+map:database a d2rq:Database;
+	d2rq:jdbcDriver "com.mysql.jdbc.Driver";
+	d2rq:jdbcDSN "jdbc:mysql://localhost:3306/numis";
+	d2rq:username "root";
+	d2rq:password "";
+	jdbc:autoReconnect "true";
+	jdbc:zeroDateTimeBehavior "convertToNull";
+	.
+##########
+# coin  
+##########
+map:coin a d2rq:ClassMap;
+	d2rq:dataStorage map:database;
+	d2rq:uriPattern "coin/@@numis.id@@";
+	d2rq:class nm:coin;
+	.
+####################
+# start and enddate
+####################
+map:coin_begin_periode a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:coin;
+	d2rq:property nm:start_date;
+	d2rq:propertyDefinitionLabel "start date";
+	d2rq:column "numis.begin_periode";
+	d2rq:datatype xsd:string;
+	.
+map:coin_eind_periode a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:coin;
+	d2rq:property nm:end_date;
+	d2rq:propertyDefinitionLabel "end date";
+	d2rq:column "numis.eind_periode";
+	d2rq:datatype xsd:string;
+	.	
+#############
+# findtype
+#############
+map:coin_karakter_vondst a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:coin;
+	d2rq:property coin:hasFindtype;
+	d2rq:propertyDefinitionLabel "findtype";
+	d2rq:uriColumn "numis.karakter_vondst";
+	d2rq:translateWith map:FindtypeTable;
+	.
+	
+map:FindtypeTable a d2rq:TranslationTable;
+	d2rq:javaClass "de.unifrankfurt.informatik.dbis.d2rqextension.PatternTranslator";
+	patt:translatePattern [
+		patt:type patt:Before; 
+		patt:delimiter "(";
+		patt:delimiter "/";
+	];
+	patt:translation [ patt:databaseValue "losse vondst"; patt:rdfValue coin:Single; ];
+	patt:translation [ patt:databaseValue "schatvondst"; patt:rdfValue coin:Hoard; ];
+	patt:translation [ patt:databaseValue "schatvondst tpq 793"; patt:rdfValue coin:Hoard; ];
+	.
+	
+##########
+# period
+##########
+map:coin_staat a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:coin;
+	d2rq:property coin:hasPeriod;
+	d2rq:propertyDefinitionLabel "period";
+	d2rq:uriColumn "numis.staat";
+	d2rq:translateWith map:PeriodTable;
+	.
+	
+
+map:PeriodTable a d2rq:TranslationTable;
+
+	d2rq:translation [ d2rq:databaseValue "Romeins Keizerrijk"; d2rq:rdfValue coin:Roman; ];
+	d2rq:translation [ d2rq:databaseValue "Romeinse Republiek"; d2rq:rdfValue coin:Roman; ];
+	d2rq:translation [ d2rq:databaseValue "Kelten"; d2rq:rdfValue coin:Celtic; ];
+	d2rq:translation [ d2rq:databaseValue "Friezen / Franken"; d2rq:rdfValue coin:Franks; ];
+	d2rq:translation [ d2rq:databaseValue "Friezen"; d2rq:rdfValue coin:Franks; ];
+	d2rq:translation [ d2rq:databaseValue "Byzantijns Keizerrijk"; d2rq:rdfValue coin:Byzantine; ];
+	d2rq:translation [ d2rq:databaseValue "Karolingisch Rijk"; d2rq:rdfValue coin:Carolingian; ];
+	d2rq:translation [ d2rq:databaseValue "Friezen / Franken ?"; d2rq:rdfValue coin:Franks; ];
+	d2rq:translation [ d2rq:databaseValue "Angelsaksen; Early England"; d2rq:rdfValue coin:AngloSaxons; ];
+	d2rq:translation [ d2rq:databaseValue "Franken"; d2rq:rdfValue coin:Franks; ];
+	d2rq:translation [ d2rq:databaseValue "Kelten; Ubii"; d2rq:rdfValue coin:Celtic; ];
+	d2rq:translation [ d2rq:databaseValue "Romeins / Merovingisch"; d2rq:rdfValue coin:Uncertain; ];
+	d2rq:translation [ d2rq:databaseValue "Kelten; Eburonen"; d2rq:rdfValue coin:Celtic; ];
+	d2rq:translation [ d2rq:databaseValue "Kelten; Sequani"; d2rq:rdfValue coin:Celtic; ];
+	d2rq:translation [ d2rq:databaseValue "Romeinse Republiek / Romeins Keizerrijk"; d2rq:rdfValue coin:Roman; ];
+	d2rq:translation [ d2rq:databaseValue "Romeins Keizerrijk / Keltisch"; d2rq:rdfValue coin:Uncertain; ];
+	d2rq:translation [ d2rq:databaseValue "Abbasiden (Arabisch; Vikingtijd)"; d2rq:rdfValue coin:Abbasid; ];
+	d2rq:translation [ d2rq:databaseValue "Germanen"; d2rq:rdfValue coin:Germanic; ];
+	d2rq:translation [ d2rq:databaseValue "Merovingen"; d2rq:rdfValue coin:Merovingian; ];	
+	d2rq:translation [ d2rq:databaseValue "(null)"; d2rq:rdfValue coin:Uncertain; ];
+	d2rq:translation [ d2rq:databaseValue "Vandalen"; d2rq:rdfValue coin:Vandalic; ];
+	d2rq:translation [ d2rq:databaseValue "Kelten; Nervii"; d2rq:rdfValue coin:Celtic; ];
+	d2rq:translation [ d2rq:databaseValue "Kelten; Carnuten"; d2rq:rdfValue coin:Celtic; ];
+	d2rq:translation [ d2rq:databaseValue "Romeins (barbaars ?)"; d2rq:rdfValue coin:Roman; ];
+	d2rq:translation [ d2rq:databaseValue "Romeins / Merovingisch ?"; d2rq:rdfValue coin:Uncertain; ];
+	d2rq:translation [ d2rq:databaseValue "Angelsaksen; Early England - Mercia"; d2rq:rdfValue coin:AngloSaxons; ];
+
+
+.
+
+##########
+# issuer
+##########
+map:coin_issuer_unknown a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:coin;
+	d2rq:property coin:hasAuthority;
+	d2rq:condition "numis.autoriteit like '(%' OR numis.autoriteit like 'late%' OR numis.autoriteit like '4e%' OR numis.autoriteit like '5e%' OR numis.autoriteit like '6e%' OR numis.autoriteit like 'anoniem%' OR numis.autoriteit like 'barbaars%' OR numis.autoriteit like 'barbaaars%' OR numis.autoriteit like 'Arabisch%' OR numis.autoriteit like 'Auguste%'";
+	d2rq:constantValue coin:Unknown;
+.
+
+
+map:coin_has_authority a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:coin;
+	d2rq:refersToClassMap map:authority;
+	d2rq:property coin:hasAuthority;
+	d2rq:propertyDefinitionLabel "hasAuthority";
+.
+
+
+map:authority a d2rq:ClassMap;
+	d2rq:dataStorage map:database;
+	d2rq:class nm:authority;
+	d2rq:propertyDefinitionLabel "authority";
+	d2rq:uriColumn "numis.autoriteit";
+	d2rq:translateWith map:AuthorityTable;
+.
+
+map:AuthorityTable a d2rq:TranslationTable;
+	d2rq:javaClass "de.unifrankfurt.informatik.dbis.d2rqextension.PatternTranslator";
+	patt:translatePattern [
+		patt:type patt:After;
+		patt:delimiter "onder";
+	];
+	
+	patt:translatePattern [
+		patt:type patt:Before;
+		patt:delimiter ",";
+		patt:delimiter "/";
+	];
+	patt:translation [ patt:databaseValue "Aemilianus (253)"; patt:rdfValue coin:Aemilian; ];
+	patt:translation [ patt:databaseValue "Anastasius I (491-518)"; patt:rdfValue coin:FlaviusAnastasiusAugustus; ];
+	patt:translation [ patt:databaseValue "Antoninus Pius (138-161)"; patt:rdfValue nm:antonius_pius; ];
+	patt:translation [ patt:databaseValue "Antoninus Pius (138-161) (?)"; patt:rdfValue nm:antonius_pius; ];
+	patt:translation [ patt:databaseValue "Antoninus Pius"; patt:rdfValue nm:antonius_pius; ];
+	patt:translation [ patt:databaseValue "Antoninus Pius Caesar (138)"; patt:rdfValue nm:antonius_pius; ];
+	patt:translation [ patt:databaseValue ";Elagabalus (218-222)"; patt:rdfValue coin:Elagabal; ];
+	patt:translation [ patt:databaseValue "Arcadius - Honorius (383-423)"; patt:rdfValue coin:Arcadius; ];
+	patt:translation [ patt:databaseValue "Arcadius (383-408)"; patt:rdfValue coin:Arcadius; ];
+	patt:translation [ patt:databaseValue "Augustus (27 v.Chr.-14 n.Chr.)"; patt:rdfValue nm:augustus; ];
+	patt:translation [ patt:databaseValue "Augustus (27 v.Chr.-14 n.Chr.) - Tiberius Caesar (9-14)"; patt:rdfValue nm:augustus; ];
+	patt:translation [ patt:databaseValue "Augustus (27 v.Chr.-14 n.Chr.);Germanus Induttili L."; patt:rdfValue nm:augustus; ];
+	patt:translation [ patt:databaseValue "Augustus (27 v.Chr.-14 n.Chr.);Maecilius Tullus"; patt:rdfValue nm:augustus; ];
+	patt:translation [ patt:databaseValue "Augustus (27 v.Chr.-14 n.Chr.);muntmeester (?)"; patt:rdfValue nm:augustus; ];
+	patt:translation [ patt:databaseValue "Aulus Plautius"; patt:rdfValue coin:Aulus_Plautius; ];
+	patt:translation [ patt:databaseValue "Aulus Postumius Albinus f."; patt:rdfValue coin:Aulus_Postumius_Albinus; ];
+	patt:translation [ patt:databaseValue "Aurelius ? (AN of AV)"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Caius Coelius Caldus"; patt:rdfValue coin:Caius_Coelius_Caldus; ];
+	patt:translation [ patt:databaseValue "Caius Egnatuleius"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Caius Julius Caesar"; patt:rdfValue nm:gaius; ];
+	patt:translation [ patt:databaseValue "Caius Naevius Balbus"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Caius Postumi Ta"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Caius Serveilius M(arci) f."; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Caius Vibius C(aii) f. Pansa"; patt:rdfValue coin:Caius_Vibius; ];
+	patt:translation [ patt:databaseValue "Caius Vibius Pansa"; patt:rdfValue coin:Caius_Vibius; ];
+	patt:translation [ patt:databaseValue "Calpurnius Piso Frugi"; patt:rdfValue coin:Calpurnius_Piso_Frugi; ];
+	patt:translation [ patt:databaseValue "Caracalla (198-211-217)"; patt:rdfValue nm:caracalla; ];
+	patt:translation [ patt:databaseValue "Caracalla (198-211)"; patt:rdfValue nm:caracalla; ];
+	patt:translation [ patt:databaseValue "Caracalla (198-217) (?)"; patt:rdfValue nm:caracalla; ];
+	patt:translation [ patt:databaseValue "Caracalla (211-217)"; patt:rdfValue nm:caracalla; ];
+	patt:translation [ patt:databaseValue "Caracalla Caesar (196-198)"; patt:rdfValue nm:caracalla; ];
+	patt:translation [ patt:databaseValue "Claudius (41-54)"; patt:rdfValue nm:claudius; ];
+	patt:translation [ patt:databaseValue "Claudius (41-54) (?)"; patt:rdfValue nm:claudius; ];
+	patt:translation [ patt:databaseValue "Claudius II (268-270)"; patt:rdfValue coin:Claudius_Gothicus; ];
+	patt:translation [ patt:databaseValue "Clodius Albinus Caesar (193-195)"; patt:rdfValue nm:clodius_albinus; ];
+	patt:translation [ patt:databaseValue "Cnaeus Blasio Cn(aei) f."; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Cnaeus Cornelius Lentulus"; patt:rdfValue coin:Gnaeus_Cornelius_Lentulus; ];
+	patt:translation [ patt:databaseValue "Cnaeus Cornelius Lentulus Marcellinus"; patt:rdfValue coin:Gnaeus_Cornelius_Lentulus_Marcellinus; ];
+	patt:translation [ patt:databaseValue "Commodus (177-180"; patt:rdfValue nm:commodus; ];
+	patt:translation [ patt:databaseValue "Commodus (177-180)"; patt:rdfValue nm:commodus; ];
+	patt:translation [ patt:databaseValue "Commodus (177-192)"; patt:rdfValue nm:commodus; ];
+	patt:translation [ patt:databaseValue "Commodus (180-192)"; patt:rdfValue nm:commodus; ];
+	patt:translation [ patt:databaseValue "Commodus Caesar (172-177)"; patt:rdfValue nm:commodus; ];
+	patt:translation [ patt:databaseValue "Commodus Caesar (175-177)"; patt:rdfValue nm:commodus; ];
+	patt:translation [ patt:databaseValue "Constans - Constantius II (337-361)"; patt:rdfValue coin:Constans; ];
+	patt:translation [ patt:databaseValue "Constans (337-350)"; patt:rdfValue coin:Constans; ];
+	patt:translation [ patt:databaseValue "Constans (Caesar (333-337 (?)"; patt:rdfValue coin:Constans; ];
+	patt:translation [ patt:databaseValue "Constantijn de Grote (Constantinus I) (307-337) c.s."; patt:rdfValue coin:Constantinus_Magnus; ];
+	patt:translation [ patt:databaseValue "Constantinus I (307-337)"; patt:rdfValue coin:Constantinus_Magnus; ];
+	patt:translation [ patt:databaseValue "Constantinus I (307-337) c.s."; patt:rdfValue coin:Constantinus_Magnus; ];
+	patt:translation [ patt:databaseValue "Constantinus I c.s."; patt:rdfValue coin:Constantinus_Magnus; ];
+	patt:translation [ patt:databaseValue "Constantinus II (?)"; patt:rdfValue coin:Flavius_Constantinus_Augustus; ];
+	patt:translation [ patt:databaseValue "Constantinus II (337-340)"; patt:rdfValue coin:Flavius_Constantinus_Augustus; ];
+	patt:translation [ patt:databaseValue "Constantinus II Caesar"; patt:rdfValue coin:Flavius_Constantinus_Augustus; ];
+	patt:translation [ patt:databaseValue "Constantinus II Caesar (317-337)"; patt:rdfValue coin:Flavius_Constantinus_Augustus; ];
+	patt:translation [ patt:databaseValue "Constantius I Caesar (293-305)"; patt:rdfValue coin:Constantius_Chlorus; ];
+	patt:translation [ patt:databaseValue "Constantius II - Constans"; patt:rdfValue coin:Constantius_Augustus; ];
+	patt:translation [ patt:databaseValue "Constantius II (324-361)"; patt:rdfValue coin:Constantius_Augustus; ];
+	patt:translation [ patt:databaseValue "Constantius II (337-361)"; patt:rdfValue coin:Constantius_Augustus; ];
+	patt:translation [ patt:databaseValue "Constantius II c.s."; patt:rdfValue coin:Constantius_Augustus; ];
+	patt:translation [ patt:databaseValue "Constantius II Caesar (324-337)"; patt:rdfValue coin:Constantius_Augustus; ];
+	patt:translation [ patt:databaseValue ";Commodus (177-183)"; patt:rdfValue nm:commodus; ];
+	patt:translation [ patt:databaseValue "Crispus Caesar (317-326)"; patt:rdfValue coin:Crispus; ];
+	patt:translation [ patt:databaseValue "Diadumenianus Caesar (217-218)"; patt:rdfValue coin:Diadumenian; ];
+	patt:translation [ patt:databaseValue "Diocletianus (284-305)"; patt:rdfValue coin:Diocletian; ];
+	patt:translation [ patt:databaseValue "Domitianus (81-96)"; patt:rdfValue nm:domitian; ];
+	patt:translation [ patt:databaseValue "Domitianus (81-96) (?)"; patt:rdfValue nm:domitian; ];
+	patt:translation [ patt:databaseValue "Elagabalus (218-222)"; patt:rdfValue coin:Elagabal; ];
+	patt:translation [ patt:databaseValue "Elagabalus (218-222) (?)"; patt:rdfValue coin:Elagabal; ];
+	patt:translation [ patt:databaseValue "Flavische periode (69-96)"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Frankische navolging van;Mauricius Tiberius 582-602)"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Gaius (Caligula 37-41)"; patt:rdfValue nm:gaius; ];
+	patt:translation [ patt:databaseValue "Galba (68-69)"; patt:rdfValue nm:galba; ];
+	patt:translation [ patt:databaseValue "Galba (68-69) (?)"; patt:rdfValue nm:galba; ];
+	patt:translation [ patt:databaseValue "Galba (68-69) en anderen"; patt:rdfValue nm:galba; ];
+	patt:translation [ patt:databaseValue "Galerius Maximianus (286-310)"; patt:rdfValue coin:Galerius; ];
+	patt:translation [ patt:databaseValue "Galerius Maximianus Caesar (297-305)"; patt:rdfValue coin:Galerius; ];
+	patt:translation [ patt:databaseValue "Gallienus (253-268)"; patt:rdfValue nm:gallienus; ];
+	patt:translation [ patt:databaseValue "Gallienus-Claudius II (253-270)"; patt:rdfValue nm:gallienus; ];
+	patt:translation [ patt:databaseValue "Germaanse navolging van;Justinianus I (527-565)"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Geta (209-212)"; patt:rdfValue nm:geta; ];
+	patt:translation [ patt:databaseValue "Geta Caesar (198-209)"; patt:rdfValue nm:geta; ];
+	patt:translation [ patt:databaseValue "Gordianus III (238-244)"; patt:rdfValue coin:Gordian; ];
+	patt:translation [ patt:databaseValue "Gratianus (367-383)"; patt:rdfValue coin:Gratian; ];
+	patt:translation [ patt:databaseValue "Hadrianus (117-138)"; patt:rdfValue nm:hadrian; ];
+	patt:translation [ patt:databaseValue "Heraclius"; patt:rdfValue coin:Heraclius; ];
+	patt:translation [ patt:databaseValue "Honorius (393-423)"; patt:rdfValue coin:Honorius; ];
+	patt:translation [ patt:databaseValue "Juba I (60-46 v.Chr.)"; patt:rdfValue coin:Juba; ];
+	patt:translation [ patt:databaseValue ";Caracalla (211-217)"; patt:rdfValue nm:caracalla; ];
+	patt:translation [ patt:databaseValue ";Septimius Severus (193-211)"; patt:rdfValue nm:septimius_severus; ];
+	patt:translation [ patt:databaseValue ";Severus Alexander (222-235)"; patt:rdfValue nm:severus_alexander; ];
+	patt:translation [ patt:databaseValue "Elagabalus 219-220)"; patt:rdfValue coin:Elagabal; ];
+	patt:translation [ patt:databaseValue "Julianus II (360-363)"; patt:rdfValue coin:Iulianus_Apostata; ];
+	patt:translation [ patt:databaseValue "Justinus II (565-578)"; patt:rdfValue coin:IustinusII; ];
+	patt:translation [ patt:databaseValue "Karel de Grote (768-814)"; patt:rdfValue coin:Carolus_Magnus; ];
+	patt:translation [ patt:databaseValue "Karel de Grote"; patt:rdfValue coin:Carolus_Magnus; ];
+	patt:translation [ patt:databaseValue "Keltisch"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Keltisch (AVAVCIA)"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Keltisch; Carnuten"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Keltisch; Eburonen"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Keltisch; Morini (?)"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Keltisch; Nervii"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Keltisch; Sequani (TOGIRIX)"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Keltisch; Ubii"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Leo I (457-474)"; patt:rdfValue coin:Leo; ];
+	patt:translation [ patt:databaseValue "Licinius I (308-324)"; patt:rdfValue coin:Licinius; ];
+	patt:translation [ patt:databaseValue "Licinius II Caesar (317-324)"; patt:rdfValue coin:Licinius; ];
+	patt:translation [ patt:databaseValue "Lucius Verus 164-169)"; patt:rdfValue nm:lusiuc_verus; ];
+	patt:translation [ patt:databaseValue "Lucius Antestius Gragulus"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Lucius Cornelius Scipio Asiaticus"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Lucius Farsuleius Mensor"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Lucius Flaminius Cilo"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Lucius Licinius"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Lucius Marcius Censorinus"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Lucius Memmius"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Lucius Procilius F."; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Lucius Rubrius Dossenus"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Lucius Rustius"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Lucius Verus (161-169)"; patt:rdfValue nm:lusiuc_verus; ];
+	patt:translation [ patt:databaseValue "Macrinus (217-218)"; patt:rdfValue nm:macrinus; ];
+	patt:translation [ patt:databaseValue "Magnentius - Decentius (350-353)"; patt:rdfValue coin:Magnetius; ];
+	patt:translation [ patt:databaseValue "Magnentius (350-353)"; patt:rdfValue coin:Magnetius; ];
+	patt:translation [ patt:databaseValue "Magnus Maximus - Flavius Victor (383-388)"; patt:rdfValue coin:Magnus_Maximus; ];
+	patt:translation [ patt:databaseValue "Magnus Maximus (383-388)"; patt:rdfValue coin:Magnus_Maximus; ];
+	patt:translation [ patt:databaseValue "Manius Acilius"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Marcus Aemilius Scaurus"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Marcus Antonius"; patt:rdfValue coin:Marcus_Antonius; ];
+	patt:translation [ patt:databaseValue "Marcus Aurelius (161-180)"; patt:rdfValue nm:marcus_aurelius; ];
+	patt:translation [ patt:databaseValue "Marcus Aurelius (161-180); Faustina II"; patt:rdfValue nm:marcus_aurelius; ];
+	patt:translation [ patt:databaseValue "Marcus Aurelius"; patt:rdfValue nm:marcus_aurelius; ];
+	patt:translation [ patt:databaseValue "Marcus Cato"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Marcus Volteius M. f."; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Maximinus I (235-238)"; patt:rdfValue coin:Maximinus_Thrax; ];
+	patt:translation [ patt:databaseValue "Maximinus II (309-313)"; patt:rdfValue coin:Maximinus_Daia; ];
+	patt:translation [ patt:databaseValue "Merovingische navolging van ;Anastasius I (491-518)"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "navolging uit;Antonijnse periode (138-192)"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "navolging van;Antoninus Pius (138-161)"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Nero (54-68)"; patt:rdfValue nm:nero; ];
+	patt:translation [ patt:databaseValue "Nero (54-68) - Commodus (64-192)"; patt:rdfValue nm:nero; ];
+	patt:translation [ patt:databaseValue "Nero (54-68) (?)"; patt:rdfValue nm:nero; ];
+	patt:translation [ patt:databaseValue "Nerva (96-98)"; patt:rdfValue nm:nerva; ];
+	patt:translation [ patt:databaseValue "Octavianus"; patt:rdfValue nm:augustus; ];
+	patt:translation [ patt:databaseValue "Severus Alexander 222-235)"; patt:rdfValue nm:severus_alexander; ];
+	patt:translation [ patt:databaseValue "Otacilia Severa (244-249)"; patt:rdfValue coin:Severa; ];
+	patt:translation [ patt:databaseValue "Otho (69)"; patt:rdfValue nm:otho; ];
+	patt:translation [ patt:databaseValue "Pertinax (193)"; patt:rdfValue nm:pertinax; ];
+	patt:translation [ patt:databaseValue "Philippus I (244-249)"; patt:rdfValue coin:Philippus; ];
+	patt:translation [ patt:databaseValue "Philippus II (247-249)"; patt:rdfValue coin:Philippus_Severus; ];
+	patt:translation [ patt:databaseValue "Philippus II Caesar (244-247)"; patt:rdfValue coin:Philippus_Severus; ];
+	patt:translation [ patt:databaseValue "Plautilla (202-205)"; patt:rdfValue coin:Plautilla; ];
+	patt:translation [ patt:databaseValue "Postumus (259-268)"; patt:rdfValue coin:Postumus; ];
+	patt:translation [ patt:databaseValue "Probus (276-282)"; patt:rdfValue coin:Marcus_Aurelius_Probus; ];
+	patt:translation [ patt:databaseValue "Publius Claudius M. f. (42 v.Chr.)"; patt:rdfValue coin:Publius_Claudius; ];
+	patt:translation [ patt:databaseValue "Publius Fonteius P.f. Capito"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Publius Sabinus"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Publius Satrienus"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Pupienus (238)"; patt:rdfValue coin:Pupienus; ];
+	patt:translation [ patt:databaseValue "Quintus Antonius Balbus"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Quintus Caecilius Metellus Pius Scipio"; patt:rdfValue coin:Metellus_Scipio; ];
+	patt:translation [ patt:databaseValue "Quintus Cassius"; patt:rdfValue coin:Quintus_Cassius_Longinus; ];
+	patt:translation [ patt:databaseValue "Quintus Fabius Labeo"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Quintus Fufius Calenus"; patt:rdfValue coin:Quintus_Fufius_Calenus; ];
+	patt:translation [ patt:databaseValue "Quintus Minucius M.f. Ter."; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Republiek"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue ";Hadrianus (117-138)"; patt:rdfValue nm:hadrian; ];
+	patt:translation [ patt:databaseValue ";Gallienus (253-268)"; patt:rdfValue nm:gallienus; ];
+	patt:translation [ patt:databaseValue "Saloninus Caesar (255-259)"; patt:rdfValue coin:Saloninus; ];
+	patt:translation [ patt:databaseValue "Septimius Severus (193-211)"; patt:rdfValue nm:septimius_severus; ];
+	patt:translation [ patt:databaseValue "Severische periode (193-235)"; patt:rdfValue nm:septimius_severus; ];
+	patt:translation [ patt:databaseValue "Severus Alexander -Elagabalus (218-222-235)"; patt:rdfValue nm:severus_alexander; ];
+	patt:translation [ patt:databaseValue "Severus Alexander (222-235)"; patt:rdfValue nm:severus_alexander; ];
+	patt:translation [ patt:databaseValue "Tacitus (275-276)"; patt:rdfValue coin:Marcus_Claudius_Tacitus; ];
+	patt:translation [ patt:databaseValue "Tetricus I (270-273)"; patt:rdfValue coin:Tetricus; ];
+	patt:translation [ patt:databaseValue "Tetricus II Caesar (270-273)"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Theodora (postuum 337-340)"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Theodosius I (379-395)"; patt:rdfValue coin:Theodosius; ];
+	patt:translation [ patt:databaseValue "Tiberius (14-37)"; patt:rdfValue nm:tiberius; ];
+	patt:translation [ patt:databaseValue "Titus (79-81)"; patt:rdfValue nm:titus; ];
+	patt:translation [ patt:databaseValue "Titus Caesar (69-79)"; patt:rdfValue nm:vespasian; ];
+	patt:translation [ patt:databaseValue "Titus Carisius"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Traianus (98-117)"; patt:rdfValue nm:trajan; ];
+	patt:translation [ patt:databaseValue "Traianus Decius (249-251)"; patt:rdfValue coin:Decius; ];
+	patt:translation [ patt:databaseValue "Trebonianus Gallus (251-253)"; patt:rdfValue coin:Trebioanus_Gallus; ];
+	patt:translation [ patt:databaseValue "Valens (364-378)"; patt:rdfValue coin:Valens; ];
+	patt:translation [ patt:databaseValue "Valentinianus I - Valens (364-378)"; patt:rdfValue coin:Valentinian; ];
+	patt:translation [ patt:databaseValue "Valentinianus I - Valens c.s. (364-378)"; patt:rdfValue coin:Valentinian; ];
+	patt:translation [ patt:databaseValue "Valentinianus I (364-375)"; patt:rdfValue coin:Valentinian; ];
+	patt:translation [ patt:databaseValue "Valentinianus II - Honorius (375-423)"; patt:rdfValue coin:Flavius_Valentinian; ];
+	patt:translation [ patt:databaseValue "Valentinianus II (375-392)"; patt:rdfValue coin:Flavius_Valentinian; ];
+	patt:translation [ patt:databaseValue "Valentinianus II c.s."; patt:rdfValue coin:Flavius_Valentinian; ];
+	patt:translation [ patt:databaseValue "Valerianus I (253-260)"; patt:rdfValue coin:Valerian; ];
+	patt:translation [ patt:databaseValue "Vandalen"; patt:rdfValue coin:Unknown; ];
+	patt:translation [ patt:databaseValue "Vespasianus (69-79)"; patt:rdfValue nm:vespasian; ];
+	patt:translation [ patt:databaseValue "Vespasianus"; patt:rdfValue nm:vespasian; ];
+	patt:translation [ patt:databaseValue "Victorinus (268-270)"; patt:rdfValue coin:Victorinus; ];
+	patt:translation [ patt:databaseValue "Vitellius (69)"; patt:rdfValue nm:vitellius; ];
+	patt:translation [ patt:databaseValue "Volusianus (251-253)"; patt:rdfValue coin:Volusianus; ];
+
+	.
+
+#############
+# coined for
+##############
+	
+	
+#map:issuer_coinedFor a d2rq:PropertyBridge;
+#	d2rq:belongsToClassMap map:coin;
+#	d2rq:property coin:coinedFor;
+#	d2rq:propertyDefinitionLabel "coinedFor";
+#	d2rq:column "numis.autoriteit";
+#	d2rq:condition "numis.autoriteit like '%onder%'";
+#	d2rq:datatype xsd:string;
+#	d2rq:translateWith map:CoinedForTable;
+#.
+	
+map:CoinedForTable a d2rq:TranslationTable;
+	d2rq:javaClass "de.unifrankfurt.informatik.dbis.d2rqextension.PatternTranslator";
+	patt:translatePattern [
+		patt:type patt:Before; 
+		patt:delimiter "onder";
+	]
+	
+.	
+##########
+# mint
+##########
+
+map:coin_plaats_unknown a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:coin;
+	d2rq:property coin:hasMint;
+	d2rq:propertyDefinitionLabel "mint";
+	d2rq:condition "numis.plaats like '(%' or numis.plaats like '?%'";
+	d2rq:constantValue coin:Unknown;
+.
+
+map:coin_plaats a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:coin;
+	d2rq:property coin:hasMint;
+	d2rq:propertyDefinitionLabel "mint";
+	d2rq:uriColumn "numis.plaats";
+	d2rq:translateWith map:MintTable;
+.
+
+map:MintTable a d2rq:TranslationTable;
+	d2rq:translation [ d2rq:databaseValue "Africa"; d2rq:rdfValue nm:africa; ];
+	d2rq:translation [ d2rq:databaseValue "Alexandri"; d2rq:rdfValue nm:alexandria; ];
+	d2rq:translation [ d2rq:databaseValue "Amisos"; d2rq:rdfValue coin:Amisos; ];
+	d2rq:translation [ d2rq:databaseValue "Antakia (Laodicea-ad-Mare)"; d2rq:rdfValue nm:antiocheia_syria; ];
+	d2rq:translation [ d2rq:databaseValue "Antakya (Antiochi)"; d2rq:rdfValue nm:antiocheia_syria; ];
+	d2rq:translation [ d2rq:databaseValue "Aquileia"; d2rq:rdfValue nm:aquileia; ];
+	d2rq:translation [ d2rq:databaseValue "Arles (Arelate)"; d2rq:rdfValue nm:arelate; ];
+	d2rq:translation [ d2rq:databaseValue "Besan?on, regio"; d2rq:rdfValue coin:Besancon; ];
+	d2rq:translation [ d2rq:databaseValue "Bourges"; d2rq:rdfValue coin:Bourges; ];
+	d2rq:translation [ d2rq:databaseValue "Brindisium / Rome"; d2rq:rdfValue nm:brundisium; ];
+	d2rq:translation [ d2rq:databaseValue "Carthago"; d2rq:rdfValue nm:carthago_nova; ];
+	d2rq:translation [ d2rq:databaseValue "Constantinopolis"; d2rq:rdfValue nm:constantinopolis; ];
+	d2rq:translation [ d2rq:databaseValue "Copia; Lugdunum"; d2rq:rdfValue nm:copia; ];
+	d2rq:translation [ d2rq:databaseValue "Cyzicus"; d2rq:rdfValue nm:cyzicus; ];
+	d2rq:translation [ d2rq:databaseValue "Dax"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "Dorestat"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "Fries ? / Frankisch ?"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "Gallia"; d2rq:rdfValue nm:gallia; ];
+	d2rq:translation [ d2rq:databaseValue "Gallia ?"; d2rq:rdfValue nm:gallia; ];
+	d2rq:translation [ d2rq:databaseValue "Gallia (lokaal ?)"; d2rq:rdfValue nm:gallia; ];
+	d2rq:translation [ d2rq:databaseValue "Gallia (lokaal (?); Tongeren / Nijmegen (?)"; d2rq:rdfValue nm:gallia; ];
+	d2rq:translation [ d2rq:databaseValue "Gallia (Lugdunum / Lyon)"; d2rq:rdfValue nm:gallia; ];
+	d2rq:translation [ d2rq:databaseValue "Gallia / Lugdunum"; d2rq:rdfValue nm:gallia; ];
+	d2rq:translation [ d2rq:databaseValue "Gallia Transalpina en Cisalpina"; d2rq:rdfValue nm:gallia; ];
+	d2rq:translation [ d2rq:databaseValue "Germaans"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "Heraclea"; d2rq:rdfValue nm:heraclea; ];
+	d2rq:translation [ d2rq:databaseValue "Hispania"; d2rq:rdfValue nm:hispania; ];
+	d2rq:translation [ d2rq:databaseValue "Homs (Emesa)"; d2rq:rdfValue coin:Homs; ];
+	d2rq:translation [ d2rq:databaseValue "Homs / Antakia (Emesa / Laodicea-ad-Mare)"; d2rq:rdfValue coin:Homs; ];
+	d2rq:translation [ d2rq:databaseValue "Izmit (Nicomedia)"; d2rq:rdfValue nm:nicomedia; ];
+	d2rq:translation [ d2rq:databaseValue "Keulen"; d2rq:rdfValue nm:colonia_claudia_ara_agrippinensium; ];
+	d2rq:translation [ d2rq:databaseValue "Keulen (Colonia)"; d2rq:rdfValue nm:colonia_claudia_ara_agrippinensium; ];
+	d2rq:translation [ d2rq:databaseValue "Londen (Londinium)"; d2rq:rdfValue nm:londinium; ];
+	d2rq:translation [ d2rq:databaseValue "Lugdunum ?"; d2rq:rdfValue nm:lugdunum; ];
+	d2rq:translation [ d2rq:databaseValue "Lugdunum (?)"; d2rq:rdfValue nm:lugdunum; ];
+	d2rq:translation [ d2rq:databaseValue "Lyon"; d2rq:rdfValue nm:lugdunum; ];
+	d2rq:translation [ d2rq:databaseValue "Lyon (Lugdunum)"; d2rq:rdfValue nm:lugdunum; ];
+	d2rq:translation [ d2rq:databaseValue "Lyon / Keulen (Lugdunum / Colonia) (Kln)"; d2rq:rdfValue nm:lugdunum; ];
+	d2rq:translation [ d2rq:databaseValue "Mainz"; d2rq:rdfValue nm:mogontiacum; ];
+	d2rq:translation [ d2rq:databaseValue "Marseille"; d2rq:rdfValue nm:massalia; ];
+	d2rq:translation [ d2rq:databaseValue "Melle"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "Mercia"; d2rq:rdfValue coin:Mercia; ];
+	d2rq:translation [ d2rq:databaseValue "Merovingisch"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "midden Rijn-gebied"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "Milaan"; d2rq:rdfValue nm:mediolanum; ];
+	d2rq:translation [ d2rq:databaseValue "Milaan (Mediolanum)"; d2rq:rdfValue nm:mediolanum; ];
+	d2rq:translation [ d2rq:databaseValue "Narbonne"; d2rq:rdfValue nm:narbo; ];
+	d2rq:translation [ d2rq:databaseValue "Nimes (Nemausus)"; d2rq:rdfValue nm:nemausus; ];
+	d2rq:translation [ d2rq:databaseValue "Noord-Itali / Milaan (Mediolanum)"; d2rq:rdfValue nm:mediolanum; ];
+	d2rq:translation [ d2rq:databaseValue "noord-west Frankrijk"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "ondetermineerbaar"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "Oosterse munt"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "Pavia"; d2rq:rdfValue coin:Pavia; ];
+	d2rq:translation [ d2rq:databaseValue "Pavia (Ticinium)"; d2rq:rdfValue coin:Pavia; ];
+	d2rq:translation [ d2rq:databaseValue "reizend munthuis"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "reizende munt"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "reizende munt; Griekenland"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "Rome"; d2rq:rdfValue nm:rome; ];
+	d2rq:translation [ d2rq:databaseValue "Rome ? (Roma ?)"; d2rq:rdfValue nm:rome; ];
+	d2rq:translation [ d2rq:databaseValue "Rome / Antiochi"; d2rq:rdfValue nm:rome; ];
+	d2rq:translation [ d2rq:databaseValue "Rome / Lyon (Roma / Lugdunum)"; d2rq:rdfValue nm:rome; ];
+	d2rq:translation [ d2rq:databaseValue "Rome / Lyon (Roma / Lugdunum) (?)"; d2rq:rdfValue nm:rome; ];
+	d2rq:translation [ d2rq:databaseValue "Rome e.a."; d2rq:rdfValue nm:rome; ];
+	d2rq:translation [ d2rq:databaseValue "Segobriga (Hispania)"; d2rq:rdfValue nm:segobriga; ];
+	d2rq:translation [ d2rq:databaseValue "Seine / Loire-regio"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "Sisak (Siscia)"; d2rq:rdfValue nm:siscia; ];
+	d2rq:translation [ d2rq:databaseValue "Thessaloniki (Thessalonica)"; d2rq:rdfValue nm:thessalonica; ];
+	d2rq:translation [ d2rq:databaseValue "Toulouse"; d2rq:rdfValue coin:Toulouse; ];
+	d2rq:translation [ d2rq:databaseValue "Tours"; d2rq:rdfValue coin:Tours; ];
+	d2rq:translation [ d2rq:databaseValue "Treveri"; d2rq:rdfValue nm:treveri; ];
+	d2rq:translation [ d2rq:databaseValue "Treveri (?)"; d2rq:rdfValue nm:treveri; ];
+	d2rq:translation [ d2rq:databaseValue "Utica"; d2rq:rdfValue nm:utica; ];
+.
+################
+# denomination
+################
+
+map:voorwerp a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:coin;
+	d2rq:property coin:hasDenomination;
+	d2rq:uriColumn "numis.voorwerp";
+	d2rq:translateWith map:DenominationTable;
+.
+
+#map:denomination a d2rq:ClassMap;
+#	d2rq:dataStorage map:database;
+#	d2rq:class nm:denomination;
+#
+#	.
+
+map:DenominationTable a d2rq:TranslationTable;
+	d2rq:translation [ d2rq:databaseValue "denarius"; d2rq:rdfValue nm:denarius; ];
+	d2rq:translation [ d2rq:databaseValue "antoninianus"; d2rq:rdfValue coin:Antoninianus; ];
+	d2rq:translation [ d2rq:databaseValue "as"; d2rq:rdfValue nm:as; ];
+	d2rq:translation [ d2rq:databaseValue "sestertius"; d2rq:rdfValue nm:sestertius; ];
+	d2rq:translation [ d2rq:databaseValue "quinarius"; d2rq:rdfValue nm:quinarius; ];
+	d2rq:translation [ d2rq:databaseValue "dupondius"; d2rq:rdfValue nm:dupondius; ];
+	d2rq:translation [ d2rq:databaseValue "aes (quadrans ?)"; d2rq:rdfValue nm:ae1; ];
+	d2rq:translation [ d2rq:databaseValue "follis"; d2rq:rdfValue nm:follis; ];
+	d2rq:translation [ d2rq:databaseValue "aes IV"; d2rq:rdfValue nm:ae4; ];
+	d2rq:translation [ d2rq:databaseValue "triquetrum-stater AE, regenboogschoteltje"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "quadrans"; d2rq:rdfValue nm:quadrans; ];
+	d2rq:translation [ d2rq:databaseValue "aes; blanco muntplaatje"; d2rq:rdfValue nm:ae1; ];
+	d2rq:translation [ d2rq:databaseValue "dupondius / as"; d2rq:rdfValue nm:dupondius; ];
+	d2rq:translation [ d2rq:databaseValue "sceatta"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "solidus"; d2rq:rdfValue coin:Solidus; ];
+	d2rq:translation [ d2rq:databaseValue "(pseudo-muntfibula; solidus)"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "as (muntmeestersas)"; d2rq:rdfValue nm:as; ];
+	d2rq:translation [ d2rq:databaseValue "(munt)"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "aes III"; d2rq:rdfValue nm:ae3; ];
+	d2rq:translation [ d2rq:databaseValue "sceatta(s)"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "aes"; d2rq:rdfValue nm:ae1; ];
+	d2rq:translation [ d2rq:databaseValue "semis"; d2rq:rdfValue nm:semis; ];
+	d2rq:translation [ d2rq:databaseValue "quadrans (?)"; d2rq:rdfValue nm:quadrans; ];
+	d2rq:translation [ d2rq:databaseValue "denarius serratus"; d2rq:rdfValue nm:denarius_serratus; ];
+	d2rq:translation [ d2rq:databaseValue "tetradrachme"; d2rq:rdfValue coin:Tetradrachm; ];
+	d2rq:translation [ d2rq:databaseValue "aureus"; d2rq:rdfValue nm:aureus; ];
+	d2rq:translation [ d2rq:databaseValue "onbekend"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "follis / aes IV"; d2rq:rdfValue nm:follis; ];
+	d2rq:translation [ d2rq:databaseValue "drachme"; d2rq:rdfValue nm:drachma; ];
+	d2rq:translation [ d2rq:databaseValue "triquetrum-stater AR, regenboogschoteltje"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "aes II"; d2rq:rdfValue nm:ae2; ];
+	d2rq:translation [ d2rq:databaseValue "(gewicht / baar / betaalmiddel)"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "stater"; d2rq:rdfValue nm:aureus; ];
+	d2rq:translation [ d2rq:databaseValue "kwart stater"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "semissis"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "sestertius, hybride"; d2rq:rdfValue nm:sestertius; ];
+	d2rq:translation [ d2rq:databaseValue "dirhem"; d2rq:rdfValue coin:dirham; ];
+	d2rq:translation [ d2rq:databaseValue "denarius, vals"; d2rq:rdfValue nm:denarius; ];
+	d2rq:translation [ d2rq:databaseValue "vier nummi"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "as / semis (?)"; d2rq:rdfValue nm:as; ];
+	d2rq:translation [ d2rq:databaseValue "aureus, vals"; d2rq:rdfValue nm:aureus; ];
+	d2rq:translation [ d2rq:databaseValue "(tessera)"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "gouden stater"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "sestertius / dupondius"; d2rq:rdfValue nm:sestertius; ];
+	d2rq:translation [ d2rq:databaseValue "aes III / IV"; d2rq:rdfValue nm:ae3; ];
+	d2rq:translation [ d2rq:databaseValue "solidus; twintig siliquae"; d2rq:rdfValue coin:Solidus; ];
+	d2rq:translation [ d2rq:databaseValue "as / antoninianus ?"; d2rq:rdfValue nm:as; ];
+	d2rq:translation [ d2rq:databaseValue "follis / aes II"; d2rq:rdfValue nm:follis; ];
+	d2rq:translation [ d2rq:databaseValue "(baar)"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "pentanummium"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "denarius, hybride"; d2rq:rdfValue nm:denarius; ];
+	d2rq:translation [ d2rq:databaseValue "solidus (?)"; d2rq:rdfValue coin:Solidus; ];
+	d2rq:translation [ d2rq:databaseValue "(muntstempel / aambeeld ?)"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "aes IV; blanco"; d2rq:rdfValue nm:ae4; ];
+	d2rq:translation [ d2rq:databaseValue "(gewicht / baar / betaal- of ruilmiddel)"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "(smeltkroesje / cupel; munt)"; d2rq:rdfValue coin:Unknown; ];
+
+	.
+#############
+# material
+#############
+
+map:coin_materiaal a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:coin;
+	d2rq:property coin:hasMaterial;
+	d2rq:uriColumn "numis.materiaal";
+	d2rq:translateWith map:MaterialTable;
+	.
+
+	
+map:MaterialTable a d2rq:TranslationTable;
+	d2rq:translation [ d2rq:databaseValue "zilver"; d2rq:rdfValue nm:ar; ];
+	d2rq:translation [ d2rq:databaseValue "koper, zilver geplateerd"; d2rq:rdfValue nm:cu; ];
+	d2rq:translation [ d2rq:databaseValue "koper"; d2rq:rdfValue nm:cu; ];
+	d2rq:translation [ d2rq:databaseValue "koper, geplateerd met zilver"; d2rq:rdfValue nm:cu; ];
+	d2rq:translation [ d2rq:databaseValue "messing"; d2rq:rdfValue coin:Brass; ];
+	d2rq:translation [ d2rq:databaseValue "(null)"; d2rq:rdfValue coin:Unknown; ];
+	d2rq:translation [ d2rq:databaseValue "goud"; d2rq:rdfValue nm:av; ];
+	d2rq:translation [ d2rq:databaseValue "koper, (biljoen)"; d2rq:rdfValue nm:cu; ];
+	d2rq:translation [ d2rq:databaseValue "zilver, met koper geplateerd"; d2rq:rdfValue nm:ar; ];
+	d2rq:translation [ d2rq:databaseValue "koper, met zilver geplateerd"; d2rq:rdfValue nm:cu; ];
+	d2rq:translation [ d2rq:databaseValue "ijzer, zilver geplateerd"; d2rq:rdfValue coin:Iron; ];
+	d2rq:translation [ d2rq:databaseValue "koper met resten van platering"; d2rq:rdfValue coin:Copplat; ];
+	d2rq:translation [ d2rq:databaseValue "ijzer"; d2rq:rdfValue coin:Iron; ];
+	d2rq:translation [ d2rq:databaseValue "aardewerk / goud"; d2rq:rdfValue coin:Pot; ];
+	d2rq:translation [ d2rq:databaseValue "koper ?"; d2rq:rdfValue nm:cu; ];
+
+.

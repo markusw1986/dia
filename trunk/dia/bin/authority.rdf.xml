@@ -1,0 +1,449 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:nm="nomisma.org/id/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:skos="http://www.w3.org/2009/08/skos-reference/skos.html#"
+	xmlns="http://www.dbis.informatik.uni-frankfurt.de/ontologies/2012/08/Coin#"
+	xml:base="http://www.dbis.informatik.uni-frankfurt.de/ontologies/2012/08/Coin">
+	<rdf:Description rdf:ID="Anthemius">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Anthemius (Procopius)</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Anthemius</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Elagabal">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Antoninus IV. (Elagabal)</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/elagabal</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Arcadius">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Arcadius</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Arcadius</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Aurelian">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Aurelianus</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Aurelian</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Basiliscus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Basiliscus</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Basiliscus</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Boii">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Boii</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Boii</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Caesar">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Julius Caesar</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Julius_Caesar
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Carausius">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Carausius</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Carausius</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Carinus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Carinus</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Carinus</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Carus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Carus</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Carus</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Claudius_Gothicus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Claudius II. (Gothicus)</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Claudius_Gothicus
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Constans">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Constans I.</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Constans</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Constantinus_Magnus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Constantinus I. (Magnus)</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Constantine_the_Great
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Flavius_Constantinus_Augustus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Constantinus II.</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Constantine_II_(emperor)
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Flavius_Claudius_Constantinus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Constantinus III.</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Constantine_III_(Western_Roman_Emperor)
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Constantius_Chlorus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Constantius I. (Chlorus)</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Constantius_Chlorus
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Constantius_Augustus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Constantius II.</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Constantius_II
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Diocletian">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Diocletianus</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Diocletian</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Eugenius">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Eugenius</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Eugenius</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Flavian">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Flavian</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Flavian_dynasty
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Florianus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Florianus</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Florianus</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Gordian">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Gordianus III.</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Gordian_III</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Gratian">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Gordianus III.</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Gratian</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Honorius">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Honorius</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Honorius_(emperor)
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Jovian">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Iovianus</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Jovian_(emperor)
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Iulianus_Apostata">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Iulianus III. (Apostata)</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Julian_the_Apostate
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="IustinusII">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Iustinus II.</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Justin_II</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Leo">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Leo I.</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Leo_I_the_Thracian
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Licinius">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Licinius I.</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Licinius</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Magnetius">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Magnentius</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Magnentius</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Magnus_Maximus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Magnus Maximus</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Magnus_Maximus
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Marcus_Antonius">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Marcus Antonius</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Marcus_Antonius ?
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Marius">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Marius</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Marcus_Aurelius_Marius
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Maxentius">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Maxentius</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Maxentius</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Maximian">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Maximianus I. (Herculius)</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Maximian</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Galerius">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Maximianus II. (Galerius)</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Galerius</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Maximinus_Thrax">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Maximinus I. (Thrax)</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Maximinus_Thrax
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Maximinus_Daia">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Maximinus II. (Daia)</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Maximinus_II</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Michael_Doukas">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Michael VII. Ducas</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Michael_VII_Doukas
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Phillip_Macedon">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Philippos III. Arrhidaios</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Philip_III_of_Macedon
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Philippus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Philippus I.</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Philip_the_Arab
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Postumus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Postumus</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Postumus</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Marcus_Aurelius_Probus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Probus</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Marcus_Aurelius_Probus
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Quintillus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Quintillus</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Quintillus</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Marcus_Claudius_Tacitus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Tacitus</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Marcus_Claudius_Tacitus
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Tetricus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Tetricus I.</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Tetricus_I</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Theodosius">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Theodosius I.</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Theodosius_I</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Theodosius_Junior_Augustus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Theodosius II.</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Theodosius_II
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Decius">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Traianus Decius</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Decius</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Trebioanus_Gallus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Trebioanus Gallus</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Trebonianus_Gallus
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Valens">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Valens</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Valens</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Valentinian">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Valentinianus I.</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Valentinian_I
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Flavius_Valentinian">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Valentinianus II.</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Valentinian_II
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Valerian">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Valerianus I.</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Valerian_(emperor)
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Vetranio">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Vetranio</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Vetranio</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Victorinus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Victorinus</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Victorinus</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Aemilian">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Aemilianus</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Aemilianus</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Flavius_Anastasius_Augustus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Anastasius I</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Anastasius_I_%28emperor%29
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Aulus_Plautius">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Aulus Plautius</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Aulus_Plautius
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Aulus_Postumius_Albinus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Aulus Postumius Albinus</skos:prefLabel>
+		<skos:related>Http://en.wikipedia.org/wiki/Aulus_Postumius_Albinus
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Caius_Coelius_Caldus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Caius Coelius Caldus</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Gaius_Coelius_Caldus
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Caius_Vibius">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Caius Vibius Pansa</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Gaius_Vibius_Pansa_Caetronianus
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Calpurnius_Piso_Frugi">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Calpurnius Piso Frugi</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Lucius_Calpurnius_Piso_Frugi_%28consul_133_BC%29
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Gnaeus_Cornelius_Lentulus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Gnaeus Cornelius Lentulus</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Gnaeus_Cornelius_Lentulus_Clodianus
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Gnaeus_Cornelius_Lentulus_Marcellinus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Gnaeus Cornelius Lentulus Marcellinus</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Gnaeus_Cornelius_Lentulus_Marcellinus
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Crispus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Crispus</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Crispus</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Diadumenian">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Diadumenian</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Diadumenian</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Heraclius">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Heraclius</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Heraclius</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Juba">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Juba</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Juba_I_of_Numidia
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Carolus_Magnus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Carolus Magnus</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Charlemagne</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Severa">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Otacilia Severa</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Marcia_Otacilia_Severa
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Philippus_Severus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Philippos II.</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Philippus_II</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Plautilla">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Plautilla</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Fulvia_Plautilla
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Publius_Claudius">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Publius Claudius</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Publius_Claudius_Pulcher_%28praetor_aft._31_BC%29
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Pupienus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Pupienus</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Pupienus</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Metellus_Scipio">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Metellus Scipio</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Quintus_Caecilius_Metellus_Pius_Scipio_Nasica
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Quintus_Cassius_Longinus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Quintus Cassius Longinus</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Quintus_Cassius_Longinus
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Quintus_Fufius_Calenus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Quintus Fufius Calenus</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Quintus_Fufius_Calenus
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Saloninuns">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Saloninus</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Saloninus</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Volusianus">
+		<rdf:type rdf:resource="http://nomisma.org/id/authority" />
+		<skos:prefLabel>Volusianus</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Volusianus</skos:related>
+	</rdf:Description>
+
+</rdf:RDF>

@@ -1,0 +1,263 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:nm="nomisma.org/id/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:skos="http://www.w3.org/2009/08/skos-reference/skos.html#"
+	xmlns="http://www.dbis.informatik.uni-frankfurt.de/ontologies/2012/08/Coin#"
+	xml:base="http://www.dbis.informatik.uni-frankfurt.de/ontologies/2012/08/Coin">
+
+	<!-- own properties -->
+	<rdf:Description rdf:ID="hasDenomination">
+		<rdf:type rdf:resource="rdf:Property" />
+		<rdfs:domain rdf:resource="nm:coin" />
+		<rdfs:range rdf:resource="nm:denomination" />
+	</rdf:Description>
+
+	<rdf:Description rdf:ID="hasMaterial">
+		<rdf:type rdf:resource="rdf:Property" />
+		<rdfs:domain rdf:resource="nm:denomination" />
+		<rdfs:range rdf:resource="nm:material" />
+	</rdf:Description>
+
+	<rdf:Description rdf:about="hasMint">
+		<rdf:type rdf:resource="rdf:Property" />
+		<rdfs:domain rdf:resource="nm:coin" />
+		<rdfs:range rdf:resource="nm:mint" />
+	</rdf:Description>
+
+	<rdf:Description rdf:about="hasAuthority">
+		<rdf:type rdf:resource="rdf:Property" />
+		<rdfs:domain rdf:resource="nm:coin" />
+		<rdfs:range rdf:resource="nm:authority" />
+	</rdf:Description>
+
+	<rdf:Description rdf:about="start_date">
+		<rdf:type rdf:resource="rdf:Property" />
+		<rdfs:domain rdf:resource="nm:coin" />
+		<rdfs:range rdf:resource="xsd:string" />
+	</rdf:Description>
+
+	<rdf:Description rdf:about="end_date">
+		<rdf:type rdf:resource="rdf:Property" />
+		<rdfs:domain rdf:resource="nm:coin" />
+		<rdfs:range rdf:resource="xsd:string" />
+	</rdf:Description>
+
+	<rdf:Description rdf:ID="coinedFor">
+		<rdf:type rdf:resource="rdf:Property" />
+		<rdfs:domain rdf:resource="nm:authority" />
+		<rdfs:range rdf:resource="xsd:string" />
+	</rdf:Description>
+
+	<rdf:Description rdf:ID="hasFindtype">
+		<rdf:type rdf:resource="rdf:Property" />
+		<rdfs:domain rdf:resource="nm:coin" />
+		<rdfs:range rdf:resource="Findtype"></rdfs:range>
+	</rdf:Description>
+
+	<rdfs:Class rdf:ID="Findtype" />
+	<!-- Findtypes (source: INTERFACE) -->
+	<rdf:Resource rdf:ID="Single">
+		<rdf:type rdf:resource="Findtype"></rdf:type>
+	</rdf:Resource>
+
+	<rdf:Resource rdf:ID="Hoard">
+		<rdf:type rdf:resource="Findtype"></rdf:type>
+	</rdf:Resource>
+
+	<rdf:Resource rdf:ID="Burial">
+		<rdf:type rdf:resource="Findtype"></rdf:type>
+	</rdf:Resource>
+
+	<rdf:Resource rdf:ID="VotiveDeposit">
+		<rdf:type rdf:resource="Findtype"></rdf:type>
+	</rdf:Resource>
+	<rdf:Resource rdf:ID="Unknown">
+		<rdf:type rdf:resource="Findtype"></rdf:type>
+	</rdf:Resource>
+	<!-- ENDE - Findtypes -->
+	<!-- Period (source: INTERFACE) -->
+	<rdf:Description rdf:ID="hasPeriod">
+		<rdf:type rdf:resource="rdf:Property" />
+		<rdfs:domain rdf:resource="nm:coin" />
+		<rdfs:range rdf:resource="Period" />
+	</rdf:Description>
+
+	<rdfs:Class rdf:ID="Period"></rdfs:Class>
+
+	<rdf:Description rdf:ID="Greek">
+		<rdf:type rdf:resource="Period" />
+	</rdf:Description>
+
+	<rdf:Description rdf:ID="Celtic">
+		<rdf:type rdf:resource="Period" />
+	</rdf:Description>
+	<rdf:Description rdf:ID="Roman">
+		<rdf:type rdf:resource="Period" />
+	</rdf:Description>
+	<rdf:Description rdf:ID="GreekImperial">
+		<rdf:type rdf:resource="Period" />
+	</rdf:Description>
+	<rdf:Description rdf:ID="Byzantine">
+		<rdf:type rdf:resource="Period" />
+	</rdf:Description>
+	<rdf:Description rdf:ID="RomanNonMon">
+		<rdf:type rdf:resource="Period" />
+	</rdf:Description>
+	<rdf:Description rdf:ID="Franks">
+		<rdf:type rdf:resource="Period"></rdf:type>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Carolingian">
+		<rdf:type rdf:resource="Period"></rdf:type>
+	</rdf:Description>
+	<rdf:Description rdf:ID="AngloSaxons">
+		<rdf:type rdf:resource="Period"></rdf:type>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Abbasid">
+		<rdf:type rdf:resource="Period"></rdf:type>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Germanic">
+		<rdf:type rdf:resource="Period"></rdf:type>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Merovingian">
+		<rdf:type rdf:resource="Period"></rdf:type>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Vandalic">
+		<rdf:type rdf:resource="Period"></rdf:type>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Numidian">
+		<rdf:type rdf:resource="Period"></rdf:type>
+	</rdf:Description>
+	<rdf:Resource rdf:ID="Unknown">
+		<rdf:type rdf:resource="Period"></rdf:type>
+	</rdf:Resource>
+	<!-- ENDE - Period -->
+
+	<!-- mint (not in nomisma) -->
+	<rdf:Description rdf:ID="Amisos">
+		<rdf:type rdf:resource="http://nomisma.org/id/mint" />
+		<skos:prefLabel>Amisos</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Samsun</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Besancon">
+		<rdf:type rdf:resource="http://nomisma.org/id/mint" />
+		<skos:prefLabel>Besancon</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Besan%C3%A7on
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Bourges">
+		<rdf:type rdf:resource="http://nomisma.org/id/mint" />
+		<skos:prefLabel>Bourges</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Bourges</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Homs">
+		<rdf:type rdf:resource="http://nomisma.org/id/mint" />
+		<skos:prefLabel>Homs</skos:prefLabel>
+		<skos:related>Http://en.wikipedia.org/wiki/Homs</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Mercia">
+		<rdf:type rdf:resource="http://nomisma.org/id/mint" />
+		<skos:prefLabel>Mercia</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Mercia</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Pavia">
+		<rdf:type rdf:resource="http://nomisma.org/id/mint" />
+		<skos:prefLabel>Pavia</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Pavia</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Toulouse">
+		<rdf:type rdf:resource="http://nomisma.org/id/mint" />
+		<skos:prefLabel>Toulouse</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Toulouse</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Tours">
+		<rdf:type rdf:resource="http://nomisma.org/id/mint" />
+		<skos:prefLabel>Tours</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Tours</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Ankyra">
+		<rdf:type rdf:resource="http://nomisma.org/id/mint" />
+		<skos:prefLabel>Ankyra</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Ankyra</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Commagene">
+		<rdf:type rdf:resource="http://nomisma.org/id/mint" />
+		<skos:prefLabel>Commagene</skos:prefLabel>
+		<skos:related>Http://en.wikipedia.org/wiki/Kingdom_of_Commagene
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Pergamon">
+		<rdf:type rdf:resource="http://nomisma.org/id/mint" />
+		<skos:prefLabel>Pergamon</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Pergamon</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Tarsus">
+		<rdf:type rdf:resource="http://nomisma.org/id/mint" />
+		<skos:prefLabel>Tarsus</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Tarsus,_Mersin
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Velem">
+		<rdf:type rdf:resource="http://nomisma.org/id/mint" />
+		<skos:prefLabel>Velem</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Velem</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Vindelicia">
+		<rdf:type rdf:resource="http://nomisma.org/id/mint" />
+		<skos:prefLabel>Vindelicia</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Vindelicia</skos:related>
+	</rdf:Description>
+
+	<!-- ENDE - mint -->
+	<!-- denomination (not in nomisma) -->
+	<rdf:Description rdf:ID="Antoninianus">
+		<rdf:type rdf:resource="http://nomisma.org/id/denomination" />
+		<skos:prefLabel>Antoninianus</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Antoninianus</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Solidus">
+		<rdf:type rdf:resource="http://nomisma.org/id/denomination" />
+		<skos:prefLabel>Solidus</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Solidus_(coin)
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Tetradrachm">
+		<rdf:type rdf:resource="http://nomisma.org/id/denomination" />
+		<skos:prefLabel>Tetradrachm</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Tetradrachm</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Siliqua">
+		<rdf:type rdf:resource="http://nomisma.org/id/denomination" />
+		<skos:prefLabel>Siliqua</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Siliqua</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Dirham">
+		<rdf:type rdf:resource="http://nomisma.org/id/denomination" />
+		<skos:prefLabel>Dirham</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Dirham</skos:related>
+	</rdf:Description>
+	<!-- ENDE - denomination -->
+	<!-- material -->
+	<rdf:Description rdf:ID="Iron">
+		<rdf:type rdf:resource="http://nomisma.org/id/material" />
+		<skos:prefLabel>Iron</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Iron</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Pot">
+		<rdf:type rdf:resource="http://nomisma.org/id/material" />
+		<skos:prefLabel>Pottery / Gold</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Pottery</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Copplat">
+		<rdf:type rdf:resource="http://nomisma.org/id/material" />
+		<skos:prefLabel>Traces of copper plating</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Copper_plating
+		</skos:related>
+	</rdf:Description>
+	<rdf:Description rdf:ID="Brass">
+		<rdf:type rdf:resource="http://nomisma.org/id/material" />
+		<skos:prefLabel>Brass</skos:prefLabel>
+		<skos:related>http://en.wikipedia.org/wiki/Brass</skos:related>
+	</rdf:Description>
+	<!-- END - material -->
+
+</rdf:RDF>
