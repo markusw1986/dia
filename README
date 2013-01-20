@@ -1,6 +1,6 @@
 organizational-todos:
 - split into core-library and reference implementeation
-- add gradle as build tool. Overall for dependency management.
+- add gradle as build tool. Especially for dependency management.
 - add properly unittests, instead of this bunch of main-classes in the test-source-folder
   \- add a sample db-schema, mapping, domain objects
 
