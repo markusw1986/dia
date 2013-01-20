@@ -1,7 +1,16 @@
-Todos:
+organizational-todos:
+- split into core-library and reference implementeation
 - add gradle as build tool. Overall for dependency management.
 - add properly unittests, instead of this bunch of main-classes in the test-source-folder
   \- add a sample db-schema, mapping, domain objects
+
+... maybe create a whole new project and push again
+
+functional-todos:
+- enable "usual" Jena-models to be queried through dia (and rename it)
+
+hot-spots:
+- get started man...
 
 Link to bachelor thesis:
 http://www.dbis.informatik.uni-frankfurt.de/~tolle/RDF/DBISResources/Integr_MTC.pdf
