@@ -1,6 +1,7 @@
 Todos:
 - add gradle as build tool. Overall for dependency management.
 - add properly unittests, instead of this bunch of main-classes in the test-source-folder
+  \- add a sample db-schema, mapping, domain objects
 
 Link to bachelor thesis:
 http://www.dbis.informatik.uni-frankfurt.de/~tolle/RDF/DBISResources/Integr_MTC.pdf
